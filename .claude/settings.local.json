@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude --chrome)",
+      "Bash(powershell -Command:*)",
+      "Bash(Remove-Item \"c:\\\\Users\\\\40578\\\\AI Coding\\\\2025 Projects\\\\GridAgent\\\\.claude\\\\skills\\\\grid-data\\\\scripts\\\\example.py\" -Force)",
+      "Bash(Remove-Item \"c:\\\\Users\\\\40578\\\\AI Coding\\\\2025 Projects\\\\GridAgent\\\\.claude\\\\skills\\\\grid-data\\\\references\\\\api_reference.md\" -Force)",
+      "Bash(Remove-Item \"c:\\\\Users\\\\40578\\\\AI Coding\\\\2025 Projects\\\\GridAgent\\\\.claude\\\\skills\\\\grid-data\\\\templates\\\\example_template.txt\" -Force)",
+      "Bash(npm run build:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

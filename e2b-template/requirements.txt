@@ -1,0 +1,50 @@
+# GridAgent E2B Sandbox Dependencies
+# These packages are installed in the sandbox template
+
+# Claude Agent SDK - THE CORRECT WAY TO BUILD AGENTS
+# This SDK provides the same tools, agent loop, and context management as Claude Code
+# DO NOT use raw anthropic SDK for agent development!
+claude-agent-sdk>=0.1.25
+
+# WebSocket server for frontend communication
+websockets>=12.0
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+
+# Data analysis
+pandas>=2.1.0
+numpy>=1.26.0
+polars>=0.20.0          # Fast DataFrame library for large datasets
+scipy>=1.12.0           # Scientific computing
+
+# Geospatial (for grid infrastructure mapping)
+geopandas>=0.14.0       # Geospatial DataFrames
+shapely>=2.0.0          # Geometry operations
+folium>=0.15.0          # Interactive maps
+overpy>=0.7             # Overpass API for OpenStreetMap data
+pyproj>=3.6.0           # Coordinate transformations
+
+# File handling and utilities
+pyyaml>=6.0.1          # YAML parsing for skill frontmatter
+python-dotenv>=1.0.0   # Environment variable management
+aiofiles>=23.2.1       # Async file operations
+
+# HTTP client and web scraping
+httpx>=0.26.0           # Async HTTP client
+beautifulsoup4>=4.12.0  # HTML parsing
+lxml>=5.1.0             # Fast XML/HTML parser
+
+# JSON handling
+orjson>=3.9.0          # Fast JSON parsing
+
+# Visualization (charts, maps, dashboards)
+matplotlib>=3.8.0
+plotly>=5.18.0
+seaborn>=0.13.0         # Statistical visualizations
+altair>=5.2.0           # Declarative charts (Vega-Lite)
+
+# Optional: Excel support for grid data
+openpyxl>=3.1.2
+
+# Development/debugging (can be removed for production)
+rich>=13.7.0           # Pretty console output

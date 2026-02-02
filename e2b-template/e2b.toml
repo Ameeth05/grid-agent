@@ -1,0 +1,27 @@
+# E2B Template Configuration for GridAgent
+# This template creates a sandbox with the GridAgent AI server
+
+# Template identifier - used when creating sandboxes
+id = "gridagent"
+
+# Dockerfile to use for building the template
+dockerfile = "Dockerfile"
+
+# Template display name
+name = "GridAgent Sandbox"
+
+# Start command - automatically run when sandbox boots
+# This starts the WebSocket server that handles agent communication
+start_cmd = "python /app/gridagent_server.py"
+
+# CPU and memory configuration
+# Using modest defaults - can be increased for heavy workloads
+[resources]
+cpu_count = 2
+memory_mb = 2048
+
+# Ports to expose from the sandbox
+# Port 8080 is the WebSocket server for frontend communication
+[[ports]]
+port = 8080
+protocol = "ws"

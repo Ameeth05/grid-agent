@@ -1,0 +1,57 @@
+# GridAgent Skills Index
+# Lightweight index for skill discovery - loaded into system prompt
+# Full skill content is read on-demand when triggered
+
+version: "1.0"
+description: "GridAgent skill index for US electrical grid analysis"
+
+skills:
+  - name: queue-analyzer
+    file: queue-analyzer.md
+    description: "Analyze PJM interconnection queue data - project status, capacity, timelines"
+    triggers:
+      - queue
+      - interconnection
+      - capacity
+      - megawatt
+      - MW
+      - project status
+      - generation
+
+  - name: cluster-study
+    file: cluster-study.md
+    description: "Analyze cluster study results - network upgrades, cost allocation, feasibility"
+    triggers:
+      - cluster
+      - study
+      - network upgrade
+      - cost allocation
+      - feasibility
+      - system impact
+
+  - name: ferc-policy
+    file: ferc-policy.md
+    description: "FERC policy guidance - Order 2023, interconnection rules, compliance"
+    triggers:
+      - FERC
+      - policy
+      - regulation
+      - order 2023
+      - compliance
+      - rule
+
+  - name: risk-assessment
+    file: risk-assessment.md
+    description: "Project risk analysis - delays, cost overruns, withdrawal probability"
+    triggers:
+      - risk
+      - delay
+      - withdrawal
+      - timeline
+      - probability
+      - assessment
+
+# Usage:
+# 1. Agent loads this index into system prompt (lightweight)
+# 2. When user query matches triggers, agent uses Read tool to load full skill .md
+# 3. Skill .md contains detailed instructions, data paths, code examples
