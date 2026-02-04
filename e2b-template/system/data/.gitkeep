@@ -1,7 +1,0 @@
-# Placeholder for grid data files
-# Data will be mounted or copied during template build
-#
-# Expected files:
-# - interconnection_queue.csv (PJM queue data)
-# - cluster_results.csv (study results)
-# - queue_metadata.json (column definitions, update dates)

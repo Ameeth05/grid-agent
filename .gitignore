@@ -10,7 +10,7 @@ local_user/
 .env
 .env.local
 *.local
-.claude/settings.local.json
+.claude/
 
 # IDE
 .idea/
@@ -37,3 +37,12 @@ npm-debug.log*
 coverage/
 .coverage
 htmlcov/
+.pytest_cache/
+
+# Data files (stored in S3)
+Data/
+*.csv
+*.parquet
+
+# E2B
+.e2b/

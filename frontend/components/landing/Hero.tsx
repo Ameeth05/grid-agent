@@ -115,7 +115,7 @@ export function Hero() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Ask about interconnection queue positions, cluster study results, FERC Order 2023 impacts..."
+                placeholder="Ask about Generation Interconnection, Cluster Results, Interconnection Queue, ISO Meetings..."
                 className="min-h-[180px] resize-none border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 pr-16 text-base sm:text-lg text-white placeholder:text-white/40 p-6"
               />
               <div className="absolute right-4 bottom-4 flex items-center gap-2">
