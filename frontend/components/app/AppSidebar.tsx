@@ -66,18 +66,19 @@ export function AppSidebar() {
 
       {/* New Chat Button */}
       <div className="p-3">
-        <Link href="/chat">
-          <Button
-            variant="outline"
-            className={cn(
-              'w-full gap-2 border-lime/30 hover:bg-lime/10 hover:border-lime/50',
-              isCollapsed && 'px-0'
-            )}
-          >
+        <Button
+          variant="outline"
+          asChild
+          className={cn(
+            'w-full gap-2 border-lime/30 hover:bg-lime/10 hover:border-lime/50',
+            isCollapsed && 'px-0'
+          )}
+        >
+          <Link href="/chat">
             <Plus className="h-4 w-4" />
             {!isCollapsed && <span>New Chat</span>}
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
 
       {/* Navigation */}
@@ -85,21 +86,23 @@ export function AppSidebar() {
         {navItems.map((item) => {
           const isActive = pathname === item.href
           return (
-            <Link key={item.href} href={item.href}>
-              <Button
-                variant="ghost"
-                className={cn(
-                  'w-full justify-start gap-3',
-                  isCollapsed && 'justify-center px-0',
-                  isActive
-                    ? 'bg-lime/10 text-lime hover:bg-lime/20'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
+            <Button
+              key={item.href}
+              variant="ghost"
+              asChild
+              className={cn(
+                'w-full justify-start gap-3',
+                isCollapsed && 'justify-center px-0',
+                isActive
+                  ? 'bg-lime/10 text-lime hover:bg-lime/20'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
+            >
+              <Link href={item.href}>
                 <item.icon className="h-4 w-4 shrink-0" />
                 {!isCollapsed && <span>{item.label}</span>}
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           )
         })}
       </nav>

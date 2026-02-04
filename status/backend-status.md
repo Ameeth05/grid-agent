@@ -1,19 +1,19 @@
 # Backend Status
 
-**Last Updated:** 2026-02-03
+**Last Updated:** 2026-02-04
 **Updated By:** orchestrator
 **Status:** PRODUCTION-READY + TESTED
 
 ## Current State
 Thin FastAPI backend for auth and E2B sandbox lifecycle. Does NOT proxy WebSocket traffic.
-Version 1.2.1 - Added test infrastructure with 30 passing tests.
+Version 1.2.2 - Security hardening (command injection fix) + 38 passing tests.
 
 ## Recent Changes (Feb 3, 2026) - Test Infrastructure
 
 ### Testing Setup
 - Created `backend/tests/` directory with pytest infrastructure
 - Created `requirements-dev.txt` (separate from production deps)
-- **30 tests passing** - All API endpoints and JWT verification tested
+- **38 tests passing** - API endpoints, JWT verification, and latency benchmarks tested
 
 ### Test Files Created
 | File | Purpose |
@@ -22,6 +22,7 @@ Version 1.2.1 - Added test infrastructure with 30 passing tests.
 | `tests/conftest.py` | Shared fixtures (mocked E2B/Supabase) |
 | `tests/test_main.py` | API endpoint tests (health, ready, start-session, CORS) |
 | `tests/test_auth.py` | JWT verification tests (valid, expired, invalid signature) |
+| `tests/test_latency.py` | Latency benchmarks (API endpoints, WebSocket, user journey) |
 
 ### Test Runner Script
 - `test-local.ps1` at project root
@@ -37,7 +38,15 @@ pytest tests/ -v
 
 ---
 
-## Recent Changes (v1.2.0)
+## Recent Changes (v1.2.1)
+
+### Security Fix - Command Injection Prevention (sandbox_manager.py)
+- Added `_validate_user_id()` method to validate user IDs against `^[a-zA-Z0-9_-]+$` regex
+- Added `shlex.quote()` for all shell arguments in S3 mount commands
+- Prevents command injection attacks via malicious user_id values
+- Raises `ValueError` for invalid user_id format (max 128 chars, alphanumeric/dash/underscore only)
+
+## Previous Changes (v1.2.0)
 
 ### Multi-tenant S3 Storage (sandbox_manager.py)
 - Added runtime S3 mounting via s3fs for Supabase S3-compatible storage
@@ -45,6 +54,11 @@ pytest tests/ -v
 - **User bucket** (`gridagent-users`) → `/user/data/` (read-write, per-user prefix `/users/<user_id>/`)
 - S3 credentials written to sandbox at `/root/.passwd-s3fs` with 600 permissions
 - Mount failures logged but don't block sandbox creation (graceful degradation)
+  - **Log Level**: Mount failures logged at `ERROR` level (`logger.error()`)
+  - **Metrics** (TODO): Emit `sandbox_mount_failures_total` counter and `sandbox_mount_success_ratio` gauge via Prometheus client
+  - **Alerting** (TODO): Create alert rule when `sandbox_mount_failures_total` increases by >5 in 5min window; operators should check Supabase S3 endpoint availability and credentials
+  - **Health Check**: `/health` endpoint does NOT currently reflect mount state; sandbox is considered healthy even with failed mounts (data features degraded, not core functionality)
+  - **User Notification**: Mount failures are NOT surfaced to end-users; agent will return errors when trying to access `/system/data` or `/user/data` paths that don't exist
 - New env vars: `SUPABASE_S3_ENDPOINT`, `SUPABASE_S3_ACCESS_KEY`, `SUPABASE_S3_SECRET_KEY`
 - Optional bucket name overrides: `SUPABASE_SYSTEM_BUCKET`, `SUPABASE_USER_BUCKET`
 

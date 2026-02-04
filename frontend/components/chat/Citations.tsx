@@ -106,12 +106,32 @@ export function parseCitations(content: string): {
     // Detect if it's a URL
     const isUrl = source.startsWith('http://') || source.startsWith('https://')
 
-    citations.push({
-      id,
-      source: isUrl ? new URL(source).hostname : source,
-      type: isUrl ? 'url' : 'file',
-      path: isUrl ? source : undefined
-    })
+    if (isUrl) {
+      try {
+        const url = new URL(source)
+        citations.push({
+          id,
+          source: url.hostname,
+          type: 'url',
+          path: source
+        })
+      } catch {
+        // Malformed URL - treat as plain text file reference
+        citations.push({
+          id,
+          source,
+          type: 'file',
+          path: undefined
+        })
+      }
+    } else {
+      citations.push({
+        id,
+        source,
+        type: 'file',
+        path: undefined
+      })
+    }
   }
 
   return { cleanContent, citations }

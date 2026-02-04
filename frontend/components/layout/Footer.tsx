@@ -65,7 +65,7 @@ export function Footer() {
                   className="group text-sm text-white/50 hover:text-lime transition-colors duration-300 flex items-center gap-2"
                 >
                   <span className="w-0 h-px bg-lime transition-all duration-300 group-hover:w-4" />
-                  Contact
+                  Request Demo
                 </button>
               </li>
             </ul>
@@ -75,7 +75,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-lime/10 mt-12 pt-8 flex justify-center items-center">
           <p className="text-sm text-white/40">
-            {new Date().getFullYear()} GridAgent. All rights reserved.
+            © {new Date().getFullYear()} GridAgent. All rights reserved.
           </p>
         </div>
       </div>

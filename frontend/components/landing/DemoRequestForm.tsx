@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { Send, Loader2 } from 'lucide-react'
 
@@ -33,6 +33,16 @@ export function DemoRequestForm({ open, onOpenChange, source = 'landing' }: Demo
     email: '',
     message: '',
   })
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Cleanup timeout on unmount or when dialog closes
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -46,8 +56,11 @@ export function DemoRequestForm({ open, onOpenChange, source = 'landing' }: Demo
       })
       setIsSubmitted(true)
 
-      // Reset after showing success
-      setTimeout(() => {
+      // Reset after showing success (clear any existing timeout first)
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+      timeoutRef.current = setTimeout(() => {
         setIsSubmitted(false)
         setFormData({ name: '', company: '', position: '', email: '', message: '' })
         onOpenChange(false)

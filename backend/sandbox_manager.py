@@ -10,6 +10,8 @@ Multi-tenant S3 Storage:
 """
 
 import os
+import re
+import shlex
 import asyncio
 import logging
 from typing import Optional, Dict, Any
@@ -116,6 +118,27 @@ class SandboxManager:
             self.s3_secret_key,
         ])
 
+    @staticmethod
+    def _validate_user_id(user_id: str) -> str:
+        """
+        Validate and sanitize user_id to prevent command injection.
+
+        Args:
+            user_id: The user ID to validate
+
+        Returns:
+            The validated user_id
+
+        Raises:
+            ValueError: If user_id contains invalid characters
+        """
+        # Only allow alphanumeric, dashes, underscores (UUID format)
+        if not re.match(r'^[a-zA-Z0-9_-]+$', user_id):
+            raise ValueError(f"Invalid user_id format: must be alphanumeric with dashes/underscores only")
+        if len(user_id) > 128:
+            raise ValueError("user_id too long (max 128 characters)")
+        return user_id
+
     def _mount_s3_storage(self, sandbox: Any, user_id: str) -> bool:
         """
         Mount S3 storage buckets in the sandbox.
@@ -136,6 +159,9 @@ class SandboxManager:
             return False
 
         try:
+            # Validate user_id to prevent command injection
+            safe_user_id = self._validate_user_id(user_id)
+
             # Write S3 credentials file
             creds_content = f"{self.s3_access_key}:{self.s3_secret_key}"
             sandbox.files.write("/root/.passwd-s3fs", creds_content)
@@ -144,13 +170,18 @@ class SandboxManager:
             # Ensure mount directories exist and are empty
             sandbox.commands.run("mkdir -p /system/data /user/data")
 
+            # Safely quote all shell arguments to prevent injection
+            safe_system_bucket = shlex.quote(self.system_bucket)
+            safe_user_bucket = shlex.quote(f"{self.user_bucket}:/users/{safe_user_id}")
+            safe_endpoint = shlex.quote(self.s3_endpoint)
+
             # Mount system bucket (read-only)
             # -o ro: read-only mount
             # -o allow_other: allow non-root access
             # -o use_path_request_style: required for some S3-compatible endpoints
             system_mount_cmd = (
-                f"s3fs {self.system_bucket} /system/data "
-                f"-o url={self.s3_endpoint} "
+                f"s3fs {safe_system_bucket} /system/data "
+                f"-o url={safe_endpoint} "
                 f"-o passwd_file=/root/.passwd-s3fs "
                 f"-o ro "
                 f"-o allow_other "
@@ -160,13 +191,13 @@ class SandboxManager:
             if result.exit_code != 0:
                 logger.error(f"Failed to mount system bucket: {result.stderr}")
                 return False
-            logger.info(f"Mounted system bucket at /system/data/")
+            logger.info("Mounted system bucket at /system/data/")
 
             # Mount user bucket with user-specific prefix (read-write)
             # Using path prefix to isolate user data: bucket:/users/<user_id>/
             user_mount_cmd = (
-                f"s3fs {self.user_bucket}:/users/{user_id} /user/data "
-                f"-o url={self.s3_endpoint} "
+                f"s3fs {safe_user_bucket} /user/data "
+                f"-o url={safe_endpoint} "
                 f"-o passwd_file=/root/.passwd-s3fs "
                 f"-o allow_other "
                 f"-o use_path_request_style"
@@ -176,10 +207,13 @@ class SandboxManager:
                 logger.error(f"Failed to mount user bucket: {result.stderr}")
                 # System mount succeeded, so partial success
                 return True
-            logger.info(f"Mounted user bucket at /user/data/ (prefix: /users/{user_id})")
+            logger.info(f"Mounted user bucket at /user/data/ (prefix: /users/{safe_user_id})")
 
             return True
 
+        except ValueError as e:
+            logger.error(f"Invalid user_id: {e}")
+            return False
         except Exception as e:
             logger.error(f"Error mounting S3 storage: {e}")
             return False

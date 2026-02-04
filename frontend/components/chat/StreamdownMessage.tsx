@@ -64,13 +64,22 @@ export function StreamdownMessage({
 
       copyBtn.addEventListener('click', async () => {
         const code = codeEl?.textContent || ''
-        await navigator.clipboard.writeText(code)
+        const originalHTML = copyBtn.innerHTML
 
-        // Show copied state
-        copyBtn.innerHTML = `<svg class="w-3.5 h-3.5 text-lime" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span class="text-lime">Copied!</span>`
+        try {
+          await navigator.clipboard.writeText(code)
+
+          // Show copied state
+          copyBtn.innerHTML = `<svg class="w-3.5 h-3.5 text-lime" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span class="text-lime">Copied!</span>`
+        } catch (err) {
+          console.error('Failed to copy to clipboard:', err)
+
+          // Show error state
+          copyBtn.innerHTML = `<svg class="w-3.5 h-3.5 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span class="text-red-400">Failed</span>`
+        }
 
         setTimeout(() => {
-          copyBtn.innerHTML = `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Copy</span>`
+          copyBtn.innerHTML = originalHTML
         }, 2000)
       })
 
