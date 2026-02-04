@@ -1,47 +1,44 @@
-import Link from 'next/link'
-import { Zap } from 'lucide-react'
+'use client'
 
-const footerLinks = {
-  product: [
-    { href: '/chat', label: 'GridAgent Chat' },
-    { href: '/watchlist', label: 'Watchlist' },
-    { href: '/about', label: 'About' },
-  ],
-  resources: [
-    { href: '/blog', label: 'Blog' },
-    { href: '/news', label: 'News' },
-    { href: '/docs', label: 'Documentation' },
-  ],
-  company: [
-    { href: '/privacy', label: 'Privacy Policy' },
-    { href: '/terms', label: 'Terms of Service' },
-    { href: '/contact', label: 'Contact' },
-  ],
-}
+import { useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+
+import { DemoRequestForm } from '@/components/landing/DemoRequestForm'
 
 const isos = ['PJM', 'MISO', 'SPP', 'ERCOT', 'NYISO', 'ISONE']
 
 export function Footer() {
+  const [demoFormOpen, setDemoFormOpen] = useState(false)
+
   return (
-    <footer className="border-t bg-muted/30">
-      <div className="container py-16 md:py-20">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-12">
+    <footer className="border-t border-lime/10 bg-[#080a00]">
+      <div className="container py-12 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Brand */}
-          <div className="col-span-2">
-            <Link href="/" className="flex items-center gap-2.5 font-display font-bold text-xl mb-4">
-              <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-electric-500 to-electric-600 text-white shadow-lg shadow-electric-500/20">
-                <Zap className="w-5 h-5" />
+          <div className="md:col-span-2">
+            <Link href="/" className="group flex items-center gap-2.5 mb-4">
+              <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-lime overflow-hidden transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(200,255,50,0.4)]">
+                <Image
+                  src="/logo.png"
+                  alt="GridAgent"
+                  width={36}
+                  height={36}
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <span>GridAgent</span>
+              <span className="text-xl font-bold tracking-[0.1em] transition-all duration-300 group-hover:tracking-[0.15em] text-lime">
+                GRIDAGENT
+              </span>
             </Link>
-            <p className="text-sm text-muted-foreground max-w-xs mb-6 leading-relaxed">
+            <p className="text-sm text-white/50 max-w-xs mb-6 leading-relaxed font-light">
               AI-powered intelligence for US power markets. Transform weeks of due diligence into minutes.
             </p>
             <div className="flex flex-wrap gap-2">
               {isos.map((iso) => (
                 <span
                   key={iso}
-                  className="px-2 py-1 text-xs font-mono bg-electric-500/10 text-electric-500 rounded"
+                  className="px-3 py-1 text-xs font-mono bg-lime/10 text-lime rounded-full border border-lime/20"
                 >
                   {iso}
                 </span>
@@ -49,74 +46,41 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Product Links */}
-          <div>
-            <h3 className="font-display font-semibold mb-4">Product</h3>
-            <ul className="space-y-3">
-              {footerLinks.product.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-electric-500 transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
           {/* Resources Links */}
           <div>
-            <h3 className="font-display font-semibold mb-4">Resources</h3>
+            <h3 className="font-semibold mb-4 text-white">Resources</h3>
             <ul className="space-y-3">
-              {footerLinks.resources.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-electric-500 transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company Links */}
-          <div>
-            <h3 className="font-display font-semibold mb-4">Company</h3>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-electric-500 transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+              <li>
+                <Link
+                  href="/about"
+                  className="group text-sm text-white/50 hover:text-lime transition-colors duration-300 flex items-center gap-2"
+                >
+                  <span className="w-0 h-px bg-lime transition-all duration-300 group-hover:w-4" />
+                  About
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={() => setDemoFormOpen(true)}
+                  className="group text-sm text-white/50 hover:text-lime transition-colors duration-300 flex items-center gap-2"
+                >
+                  <span className="w-0 h-px bg-lime transition-all duration-300 group-hover:w-4" />
+                  Contact
+                </button>
+              </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">
+        <div className="border-t border-lime/10 mt-12 pt-8 flex justify-center items-center">
+          <p className="text-sm text-white/40">
             {new Date().getFullYear()} GridAgent. All rights reserved.
           </p>
-          <div className="flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-electric-500"></span>
-            </span>
-            <span className="text-sm text-muted-foreground">
-              YC S26 Applicant
-            </span>
-          </div>
         </div>
       </div>
+
+      <DemoRequestForm open={demoFormOpen} onOpenChange={setDemoFormOpen} />
     </footer>
   )
 }

@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useCallback } from 'react'
-import { useTheme } from '@/hooks/useTheme'
 
 interface Substation {
   x: number
@@ -22,9 +21,12 @@ interface EnergyPacket {
   color: string
 }
 
+// Kimi-style lime color palette (hex for alpha concatenation)
+const LIME_COLOR = '#C8FF32'
+const LIME_GLOW = '#C8FF324D'
+
 export function GridAnimation() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const { isDark, mounted } = useTheme()
   const animationRef = useRef<number | null>(null)
   const substationsRef = useRef<Substation[]>([])
   const packetsRef = useRef<EnergyPacket[]>([])
@@ -110,8 +112,6 @@ export function GridAnimation() {
   }, [])
 
   useEffect(() => {
-    if (!mounted) return
-
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -133,37 +133,22 @@ export function GridAnimation() {
 
     let time = 0
 
-    // Colors
-    const getColors = () => {
-      if (isDark) {
-        return {
-          lineBase: 'rgba(16, 185, 129, 0.08)',
-          lineActive: 'rgba(16, 185, 129, 0.25)',
-          nodeMajor: '#10B981',
-          nodeMinor: '#34D399',
-          nodeSolar: '#F59E0B',
-          nodeWind: '#22D3EE',
-          glow: 'rgba(16, 185, 129, 0.3)',
-          packet: '#10B981',
-        }
-      }
-      return {
-        lineBase: 'rgba(16, 185, 129, 0.06)',
-        lineActive: 'rgba(16, 185, 129, 0.2)',
-        nodeMajor: '#059669',
-        nodeMinor: '#10B981',
-        nodeSolar: '#D97706',
-        nodeWind: '#0891B2',
-        glow: 'rgba(16, 185, 129, 0.2)',
-        packet: '#059669',
-      }
+    // Kimi-style lime colors (hex format for alpha concatenation)
+    const colors = {
+      lineBase: '#C8FF3214',
+      lineActive: '#C8FF3240',
+      nodeMajor: LIME_COLOR,
+      nodeMinor: '#C8FF32B3',
+      nodeSolar: '#F59E0B',
+      nodeWind: '#22D3EE',
+      glow: LIME_GLOW,
+      packet: LIME_COLOR,
     }
 
     const animate = () => {
       time += 0.016 // ~60fps
       const width = canvas.offsetWidth
       const height = canvas.offsetHeight
-      const colors = getColors()
 
       ctx.clearRect(0, 0, width, height)
 
@@ -193,9 +178,6 @@ export function GridAnimation() {
         node.connections.forEach((j) => {
           if (j > i) {
             const other = substations[j]
-            const dx = other.x - node.x
-            const dy = other.y - node.y
-            const distance = Math.sqrt(dx * dx + dy * dy)
 
             // Base line
             ctx.beginPath()
@@ -207,10 +189,11 @@ export function GridAnimation() {
 
             // Pulsing effect on active lines
             const pulseIntensity = Math.sin(time * 2 + node.pulsePhase) * 0.5 + 0.5
+            const pulseAlpha = Math.floor((0.1 + pulseIntensity * 0.15) * 255).toString(16).padStart(2, '0')
             ctx.beginPath()
             ctx.moveTo(node.x, node.y)
             ctx.lineTo(other.x, other.y)
-            ctx.strokeStyle = colors.lineActive.replace('0.25', (0.1 + pulseIntensity * 0.15).toFixed(2))
+            ctx.strokeStyle = `#C8FF32${pulseAlpha}`
             ctx.lineWidth = 1
             ctx.stroke()
           }
@@ -277,7 +260,8 @@ export function GridAnimation() {
         // Pulsing ring
         ctx.beginPath()
         ctx.arc(node.x, node.y, baseSize + pulse * 4, 0, Math.PI * 2)
-        ctx.strokeStyle = nodeColor + (Math.floor(pulse * 40) + 10).toString(16)
+        const ringAlpha = (Math.floor(pulse * 40) + 10).toString(16).padStart(2, '0')
+        ctx.strokeStyle = nodeColor + ringAlpha
         ctx.lineWidth = 1
         ctx.stroke()
 
@@ -294,26 +278,20 @@ export function GridAnimation() {
         ctx.fill()
       })
 
-      // Draw subtle grid lines for reference
-      ctx.globalAlpha = 0.03
-      const gridSize = 80
-      for (let x = 0; x < width; x += gridSize) {
-        ctx.beginPath()
-        ctx.moveTo(x, 0)
-        ctx.lineTo(x, height)
-        ctx.strokeStyle = isDark ? '#fff' : '#000'
-        ctx.lineWidth = 1
-        ctx.stroke()
-      }
-      for (let y = 0; y < height; y += gridSize) {
-        ctx.beginPath()
-        ctx.moveTo(0, y)
-        ctx.lineTo(width, y)
-        ctx.strokeStyle = isDark ? '#fff' : '#000'
-        ctx.lineWidth = 1
-        ctx.stroke()
-      }
+      // Draw subtle grid lines for reference - Kimi style dots
+      const gridSize = 40
       ctx.globalAlpha = 1
+      for (let x = 0; x < width; x += gridSize) {
+        for (let y = 0; y < height; y += gridSize) {
+          // Subtle opacity variation
+          const opacity = 0.05 + Math.sin(time + x * 0.01 + y * 0.01) * 0.03
+          const dotAlpha = Math.floor(opacity * 255).toString(16).padStart(2, '0')
+          ctx.beginPath()
+          ctx.arc(x, y, 1.5, 0, Math.PI * 2)
+          ctx.fillStyle = `#C8FF32${dotAlpha}`
+          ctx.fill()
+        }
+      }
 
       animationRef.current = requestAnimationFrame(animate)
     }
@@ -326,13 +304,13 @@ export function GridAnimation() {
         cancelAnimationFrame(animationRef.current)
       }
     }
-  }, [isDark, mounted, initializeGrid])
+  }, [initializeGrid])
 
   return (
     <canvas
       ref={canvasRef}
       className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ opacity: 0.8 }}
+      style={{ opacity: 0.9 }}
     />
   )
 }

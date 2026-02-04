@@ -1,8 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, ChevronRight, Loader2, CheckCircle2, XCircle } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { ChevronDown, Wrench, Check, X, Loader2 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
@@ -15,83 +14,75 @@ interface ToolExecutionProps {
 export function ToolExecution({ execution }: ToolExecutionProps) {
   const [isOpen, setIsOpen] = useState(false)
 
-  const statusIcon = {
-    running: <Loader2 className="h-4 w-4 animate-spin text-electric-500" />,
-    completed: <CheckCircle2 className="h-4 w-4 text-green-500" />,
-    error: <XCircle className="h-4 w-4 text-destructive" />,
-  }[execution.status]
-
-  const toolDisplayName = execution.tool
-    .replace(/_/g, ' ')
-    .replace(/\b\w/g, (l) => l.toUpperCase())
+  // Format tool name for display (keep original casing, just clean up)
+  const toolDisplayName = `tool-${execution.tool}`
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <CollapsibleTrigger className="w-full">
-        <div
-          className={cn(
-            'flex items-center gap-3 px-4 py-3 rounded-lg border transition-colors',
-            'hover:bg-muted/50',
-            execution.status === 'running' && 'border-electric-500/30 bg-electric-500/5',
-            execution.status === 'completed' && 'border-green-500/30 bg-green-500/5',
-            execution.status === 'error' && 'border-destructive/30 bg-destructive/5'
+      <CollapsibleTrigger className="w-full group">
+        <div className="flex items-center gap-2 py-1.5 px-3 rounded-md bg-[#1c1c1c] hover:bg-[#252525] transition-colors">
+          {/* Wrench icon */}
+          <Wrench className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+
+          {/* Tool name in monospace */}
+          <span className="font-mono text-sm text-foreground/80">{toolDisplayName}</span>
+
+          {/* Status badge */}
+          {execution.status === 'running' ? (
+            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-lime/10 text-lime text-xs">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              <span>Running</span>
+            </span>
+          ) : execution.status === 'completed' ? (
+            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-lime/10 text-lime text-xs">
+              <Check className="h-3 w-3" />
+              <span>Completed</span>
+            </span>
+          ) : (
+            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-destructive/10 text-destructive text-xs">
+              <X className="h-3 w-3" />
+              <span>Error</span>
+            </span>
           )}
-        >
-          {statusIcon}
-          <span className="flex-1 text-left font-medium text-sm">{toolDisplayName}</span>
-          <motion.div
-            animate={{ rotate: isOpen ? 90 : 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-          </motion.div>
+
+          {/* Expand chevron */}
+          <ChevronDown className={cn(
+            "h-4 w-4 text-muted-foreground ml-auto transition-transform duration-200",
+            isOpen && "rotate-180"
+          )} />
         </div>
       </CollapsibleTrigger>
 
-      <AnimatePresence>
-        {isOpen && (
-          <CollapsibleContent forceMount>
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden"
-            >
-              <div className="px-4 py-3 mt-2 rounded-lg bg-muted/30 border text-sm space-y-3">
-                {/* Arguments */}
-                <div>
-                  <div className="text-xs font-medium text-muted-foreground mb-1">
-                    Arguments
-                  </div>
-                  <pre className="p-2 rounded bg-background/50 text-xs overflow-x-auto">
-                    {JSON.stringify(execution.args, null, 2)}
-                  </pre>
-                </div>
-
-                {/* Result */}
-                {execution.result && (
-                  <div>
-                    <div className="text-xs font-medium text-muted-foreground mb-1">
-                      Result
-                    </div>
-                    <pre
-                      className={cn(
-                        'p-2 rounded text-xs overflow-x-auto max-h-60 overflow-y-auto',
-                        execution.status === 'error'
-                          ? 'bg-destructive/10 text-destructive'
-                          : 'bg-background/50'
-                      )}
-                    >
-                      {execution.result}
-                    </pre>
-                  </div>
-                )}
+      {isOpen && (
+        <CollapsibleContent>
+          <div className="mt-1 ml-5 pl-3 border-l border-border/50 text-xs space-y-2 py-2">
+            {/* Arguments */}
+            {execution.args && Object.keys(execution.args).length > 0 && (
+              <div>
+                <span className="text-muted-foreground">Args: </span>
+                <code className="text-foreground/70">
+                  {JSON.stringify(execution.args)}
+                </code>
               </div>
-            </motion.div>
-          </CollapsibleContent>
-        )}
-      </AnimatePresence>
+            )}
+
+            {/* Result */}
+            {execution.result && (
+              <div>
+                <span className="text-muted-foreground">Result: </span>
+                <code className={cn(
+                  "text-foreground/70",
+                  execution.status === 'error' && "text-destructive"
+                )}>
+                  {execution.result.length > 100
+                    ? execution.result.substring(0, 100) + '...'
+                    : execution.result}
+                </code>
+              </div>
+            )}
+          </div>
+        </CollapsibleContent>
+      )}
     </Collapsible>
   )
 }

@@ -14,14 +14,21 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     GRIDAGENT_WS_PORT=8080
 
-# Install minimal system dependencies
+# Install system dependencies
 # - curl: for health checks
 # - git: for potential repo cloning in analysis
+# - s3fs: for mounting Supabase S3-compatible storage at runtime
+# - fuse: required by s3fs
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     git \
+    s3fs \
+    fuse \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
+
+# Enable FUSE for non-root users (required for s3fs in container)
+RUN echo "user_allow_other" >> /etc/fuse.conf
 
 # NOTE: Node.js and Claude Code CLI are NOT needed!
 # The claude-agent-sdk Python package bundles the CLI automatically (since v0.1.8+).

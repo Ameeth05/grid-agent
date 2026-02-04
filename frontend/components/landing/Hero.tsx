@@ -1,34 +1,27 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, ArrowRight, Activity, TrendingUp, Shield, Clock } from 'lucide-react'
+import { Send, ArrowRight } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { GridAnimation } from './GridAnimation'
 import { PromptChips } from './PromptChips'
+import { DemoRequestForm } from './DemoRequestForm'
 
 const rotatingWords = [
-  'Due Diligence',
-  'Queue Analysis',
-  'Risk Assessment',
-  'FERC Research',
-  'Cost Modeling',
-]
-
-const liveMetrics = [
-  { label: 'Queue Projects', value: '12,847', icon: Activity, change: '+234 this week' },
-  { label: 'ISOs Tracked', value: '6', icon: TrendingUp, change: 'PJM, MISO, ERCOT...' },
-  { label: 'Data Sources', value: '50+', icon: Shield, change: 'FERC, OASIS, ISO APIs' },
-  { label: 'Avg Response', value: '<30s', icon: Clock, change: 'vs weeks manual' },
+  'Transmission Cost Analysis',
+  'Interconnection Queues',
+  'Cluster Result Analysis',
+  'ISO Stakeholder Meetings',
 ]
 
 export function Hero() {
   const [query, setQuery] = useState('')
   const [wordIndex, setWordIndex] = useState(0)
-  const router = useRouter()
+  const [demoFormOpen, setDemoFormOpen] = useState(false)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,14 +32,12 @@ export function Hero() {
 
   const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault()
-    if (query.trim()) {
-      router.push(`/chat?q=${encodeURIComponent(query.trim())}`)
-    }
+    setDemoFormOpen(true)
   }
 
   const handlePromptClick = (prompt: string) => {
     setQuery(prompt)
-    router.push(`/chat?q=${encodeURIComponent(prompt)}`)
+    setDemoFormOpen(true)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -57,67 +48,47 @@ export function Hero() {
   }
 
   return (
-    <section className="relative min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-4 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden bg-[#080a00]">
       {/* Background Animation */}
       <div className="absolute inset-0">
         <GridAnimation />
       </div>
 
-      {/* Gradient overlays for depth */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-radial from-electric-500/5 via-transparent to-transparent pointer-events-none" />
+      {/* Gradient overlays for depth - Kimi style */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#080a00] via-transparent to-[#080a00] pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#080a00] via-transparent to-[#080a00] pointer-events-none" />
 
       {/* Content */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto">
-        {/* Live indicator */}
+      <div className="relative z-10 w-full max-w-5xl mx-auto pt-20">
+        {/* Main headline - Kimi style with light font weight */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="flex justify-center mb-8"
+          transition={{ delay: 0.3, duration: 1, ease: 'easeOut' }}
+          className="text-center mb-8"
         >
-          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-electric-500/20 bg-electric-500/5 backdrop-blur-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-electric-500"></span>
-            </span>
-            <span className="text-sm font-medium text-electric-600 dark:text-electric-400">
-              Live Grid Intelligence
-            </span>
-            <span className="text-xs text-muted-foreground">|</span>
-            <span className="text-xs text-muted-foreground">12,847 projects tracked</span>
-          </div>
-        </motion.div>
-
-        {/* Main headline */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.6 }}
-          className="text-center mb-6"
-        >
-          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-4">
-            <span className="text-foreground">Power Market</span>
-            <br />
-            <span className="bg-gradient-to-r from-electric-500 via-grid-400 to-energy-500 bg-clip-text text-transparent">
-              Intelligence
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-light tracking-tight mb-6 text-white">
+            AI Agents For{' '}
+            <span className="text-lime text-glow-lime">
+              US Power Market Intelligence
             </span>
           </h1>
 
           {/* Rotating subtitle */}
-          <div className="h-12 flex items-center justify-center">
-            <span className="text-xl sm:text-2xl md:text-3xl text-muted-foreground font-medium">
-              AI-powered{' '}
+          <div className="h-16 flex items-baseline justify-center gap-3">
+            <span className="text-xl sm:text-2xl md:text-3xl text-white/60 font-light">
+              AI-Powered
             </span>
-            <div className="relative h-[1.5em] w-[220px] sm:w-[280px] ml-2 overflow-hidden">
+            <span className="text-xl sm:text-2xl md:text-3xl text-white/40 font-light">—</span>
+            <div className="relative w-[260px] sm:w-[340px] md:w-[400px] overflow-visible">
               <AnimatePresence mode="wait">
                 <motion.span
                   key={wordIndex}
-                  initial={{ y: 40, opacity: 0 }}
+                  initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -40, opacity: 0 }}
+                  exit={{ y: -30, opacity: 0 }}
                   transition={{ duration: 0.4, ease: 'easeOut' }}
-                  className="absolute inset-0 text-xl sm:text-2xl md:text-3xl font-semibold text-electric-500"
+                  className="inline-block text-xl sm:text-2xl md:text-3xl font-semibold text-lime whitespace-nowrap"
                 >
                   {rotatingWords[wordIndex]}
                 </motion.span>
@@ -126,51 +97,37 @@ export function Hero() {
           </div>
         </motion.div>
 
-        {/* Value proposition */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto text-center mb-12 leading-relaxed"
-        >
-          Transform <span className="text-foreground font-medium">weeks of manual research</span> into
-          <span className="text-foreground font-medium"> minutes</span>. Analyze interconnection queues,
-          FERC filings, cluster studies, and market risks across{' '}
-          <span className="text-electric-500 font-medium">all major US ISOs</span>.
-        </motion.p>
-
-        {/* Chat Input - Premium treatment */}
+        {/* Chat Input - Kimi style with lime glow */}
         <motion.form
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
+          initial={{ opacity: 0, y: 60, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 0.6, duration: 1, ease: 'easeOut' }}
           onSubmit={handleSubmit}
-          className="relative max-w-3xl mx-auto mb-8"
+          className="relative max-w-4xl mx-auto mb-10"
         >
           <div className="relative group">
-            {/* Animated border glow */}
-            <div className="absolute -inset-[2px] bg-gradient-to-r from-electric-500/50 via-grid-400/50 to-energy-500/50 rounded-2xl blur-xl opacity-0 group-hover:opacity-60 group-focus-within:opacity-60 transition-opacity duration-500" />
-            <div className="absolute -inset-[1px] bg-gradient-to-r from-electric-500 via-grid-400 to-energy-500 rounded-2xl opacity-0 group-hover:opacity-20 group-focus-within:opacity-30 transition-opacity duration-300" />
+            {/* Lime glow effect */}
+            <div className="absolute -inset-[2px] bg-lime/20 rounded-2xl blur-xl opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute -inset-px bg-gradient-to-r from-lime/30 via-lime/50 to-lime/30 rounded-2xl opacity-50" />
 
-            <div className="relative bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl shadow-electric-500/5">
+            <div className="relative bg-[#0d1005]/80 backdrop-blur-xl border border-lime/20 rounded-2xl shadow-2xl">
               <Textarea
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask about interconnection queue positions, cluster study results, FERC Order 2023 impacts..."
-                className="min-h-[140px] resize-none border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 pr-16 text-base sm:text-lg placeholder:text-muted-foreground/60"
+                className="min-h-[180px] resize-none border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 pr-16 text-base sm:text-lg text-white placeholder:text-white/40 p-6"
               />
-              <div className="absolute right-3 bottom-3 flex items-center gap-2">
-                <span className="text-xs text-muted-foreground hidden sm:block">
-                  {query.length > 0 ? 'Enter to send' : ''}
+              <div className="absolute right-4 bottom-4 flex items-center gap-2">
+                <span className="text-xs text-white/40 hidden sm:block">
+                  {query.length > 0 ? 'Enter to submit' : ''}
                 </span>
                 <Button
                   type="submit"
                   size="icon"
-                  disabled={!query.trim()}
-                  className="h-11 w-11 rounded-xl bg-gradient-to-r from-electric-500 to-electric-600 hover:from-electric-600 hover:to-electric-700 disabled:opacity-50 shadow-lg shadow-electric-500/25 transition-all duration-300"
+                  className="h-14 w-14 rounded-xl bg-lime text-[#080a00] hover:scale-105 hover:shadow-[0_0_20px_rgba(200,255,50,0.4)] transition-all duration-300"
                 >
-                  <Send className="h-5 w-5" />
+                  <Send className="h-6 w-6" />
                 </Button>
               </div>
             </div>
@@ -181,63 +138,49 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
         >
           <PromptChips onPromptClick={handlePromptClick} />
         </motion.div>
 
-        {/* Live metrics strip */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"
-        >
-          {liveMetrics.map((metric, index) => (
-            <motion.div
-              key={metric.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 + index * 0.1, duration: 0.4 }}
-              className="group relative p-4 rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm hover:bg-card/50 hover:border-electric-500/30 transition-all duration-300"
-            >
-              <div className="flex items-start justify-between mb-2">
-                <metric.icon className="h-4 w-4 text-electric-500" />
-                <span className="text-[10px] text-muted-foreground font-mono">LIVE</span>
-              </div>
-              <div className="font-display text-2xl font-bold text-foreground mb-1">
-                {metric.value}
-              </div>
-              <div className="text-xs text-muted-foreground font-medium mb-1">
-                {metric.label}
-              </div>
-              <div className="text-[10px] text-electric-500/80 truncate">
-                {metric.change}
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* CTA for non-authenticated users */}
+        {/* CTA Button - Kimi style */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.7, duration: 0.5 }}
-          className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4"
+          transition={{ delay: 1, duration: 0.5 }}
+          className="mt-12 flex items-center justify-center"
         >
           <Button
-            onClick={() => router.push('/chat')}
+            onClick={() => setDemoFormOpen(true)}
             size="lg"
-            className="group bg-gradient-to-r from-electric-500 to-electric-600 hover:from-electric-600 hover:to-electric-700 text-white px-8 py-6 text-lg rounded-xl shadow-lg shadow-electric-500/25"
+            className="group bg-lime text-[#080a00] font-semibold px-10 py-7 text-lg rounded-xl hover:scale-105 hover:shadow-[0_0_30px_rgba(200,255,50,0.5)] transition-all duration-300"
           >
+            <Image
+              src="/logo.png"
+              alt="GridAgent"
+              width={20}
+              height={20}
+              className="mr-2 h-5 w-5"
+            />
             Start Analyzing
             <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </Button>
-          <span className="text-sm text-muted-foreground">
-            No credit card required
-          </span>
+        </motion.div>
+
+        {/* Scroll indicator - Kimi style */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2, duration: 0.5 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        >
+          <span className="text-white/40 text-xs uppercase tracking-widest">Scroll to explore</span>
+          <div className="w-px h-12 bg-gradient-to-b from-lime/50 to-transparent" />
         </motion.div>
       </div>
+
+      {/* Demo Request Form Modal */}
+      <DemoRequestForm open={demoFormOpen} onOpenChange={setDemoFormOpen} />
     </section>
   )
 }

@@ -10,6 +10,7 @@ local_user/
 .env
 .env.local
 *.local
+.claude/settings.local.json
 
 # IDE
 .idea/

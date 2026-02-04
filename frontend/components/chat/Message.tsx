@@ -1,28 +1,89 @@
 'use client'
 
-import { User, Bot, Loader2 } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { useMemo } from 'react'
+import { User, Bot } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ToolExecution } from './ToolExecution'
+import { StreamdownMessage, StreamingCursor } from './StreamdownMessage'
+import { MessageActions } from './MessageActions'
+import { Citations, parseCitations } from './Citations'
+import { ThinkingBlock } from './ThinkingBlock'
 import type { ChatMessage } from '@/types'
+
+// Green pulsing dots like Claude Code
+function PulsingDots() {
+  return (
+    <div className="flex items-center gap-1">
+      <span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" style={{ animationDelay: '0ms' }} />
+      <span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" style={{ animationDelay: '150ms' }} />
+      <span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" style={{ animationDelay: '300ms' }} />
+    </div>
+  )
+}
+
+// Separate thinking text from response text
+function parseThinking(content: string): { thinking: string; response: string } {
+  // Look for thinking patterns - text before markdown formatting starts
+  // Thinking typically starts with phrases like "I need to", "Let me", etc.
+  // and continues until we hit markdown (##, **, ```, etc.)
+
+  const lines = content.split('\n')
+  const thinkingLines: string[] = []
+  const responseLines: string[] = []
+  let foundMarkdown = false
+
+  for (const line of lines) {
+    // Check if this line contains markdown formatting
+    const hasMarkdown = /^#+\s|^\*\*|^```|^-\s|^\d+\.\s|^\|/.test(line.trim())
+
+    if (hasMarkdown || foundMarkdown) {
+      foundMarkdown = true
+      responseLines.push(line)
+    } else {
+      thinkingLines.push(line)
+    }
+  }
+
+  const thinking = thinkingLines.join('\n').trim()
+  const response = responseLines.join('\n').trim()
+
+  // Only treat as thinking if it's substantial and there's also a response
+  if (thinking.length > 100 && response.length > 50) {
+    return { thinking, response }
+  }
+
+  return { thinking: '', response: content }
+}
 
 interface MessageProps {
   message: ChatMessage
+  onRegenerate?: () => void
 }
 
-export function Message({ message }: MessageProps) {
+export function Message({ message, onRegenerate }: MessageProps) {
   const isUser = message.role === 'user'
 
+  // Parse citations and thinking from message content
+  const { cleanContent, citations, thinking } = useMemo(() => {
+    if (isUser || message.isStreaming) {
+      return { cleanContent: message.content, citations: [], thinking: '' }
+    }
+    const citationResult = parseCitations(message.content)
+    const thinkingResult = parseThinking(citationResult.cleanContent)
+    return {
+      cleanContent: thinkingResult.response || citationResult.cleanContent,
+      citations: citationResult.citations,
+      thinking: thinkingResult.thinking
+    }
+  }, [message.content, isUser, message.isStreaming])
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+    <div
       className={cn(
-        'flex gap-4 p-4 rounded-xl',
-        isUser ? 'bg-muted/30' : 'bg-card border'
+        'group flex gap-4 p-4 rounded-xl relative animate-fade-in',
+        isUser ? 'bg-muted/30' : 'bg-card border border-border/50'
       )}
     >
       {/* Avatar */}
@@ -30,8 +91,8 @@ export function Message({ message }: MessageProps) {
         <AvatarFallback
           className={cn(
             isUser
-              ? 'bg-electric-100 text-electric-700 dark:bg-electric-900 dark:text-electric-300'
-              : 'bg-gradient-to-br from-electric-500 to-electric-600 text-white'
+              ? 'bg-lime/10 text-lime'
+              : 'bg-gradient-to-br from-lime/80 to-lime text-background'
           )}
         >
           {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
@@ -40,13 +101,22 @@ export function Message({ message }: MessageProps) {
 
       {/* Content */}
       <div className="flex-1 min-w-0 space-y-3">
-        {/* Role Label */}
-        <div className="flex items-center gap-2">
-          <span className="font-medium text-sm">
-            {isUser ? 'You' : 'GridAgent'}
-          </span>
-          {message.isStreaming && (
-            <Loader2 className="h-3 w-3 animate-spin text-electric-500" />
+        {/* Role Label + Actions */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="font-medium text-sm text-lime">
+              {isUser ? 'You' : 'GridAgent'}
+            </span>
+            {message.isStreaming && <PulsingDots />}
+          </div>
+
+          {/* Message Actions (visible on hover) */}
+          {!message.isStreaming && (
+            <MessageActions
+              content={message.content}
+              role={message.role}
+              onRegenerate={!isUser ? onRegenerate : undefined}
+            />
           )}
         </div>
 
@@ -59,15 +129,34 @@ export function Message({ message }: MessageProps) {
           </div>
         )}
 
-        {/* Message Content */}
+        {/* Thinking Block (collapsible) */}
+        {thinking && (
+          <ThinkingBlock content={thinking} isStreaming={false} />
+        )}
+
+        {/* Message Content - Using Streamdown for markdown rendering */}
         <div className="prose prose-sm dark:prose-invert max-w-none">
-          <div className="whitespace-pre-wrap break-words">
-            {message.content}
-            {message.isStreaming && (
-              <span className="inline-block w-2 h-4 ml-1 bg-electric-500 animate-pulse" />
-            )}
-          </div>
+          {isUser ? (
+            // User messages: plain text (no markdown)
+            <div className="whitespace-pre-wrap break-words">
+              {message.content}
+            </div>
+          ) : (
+            // Assistant messages: Streamdown markdown rendering
+            <>
+              <StreamdownMessage
+                content={cleanContent}
+                isStreaming={message.isStreaming}
+              />
+              {message.isStreaming && <StreamingCursor />}
+            </>
+          )}
         </div>
+
+        {/* Citations */}
+        {!message.isStreaming && citations.length > 0 && (
+          <Citations citations={citations} />
+        )}
 
         {/* Token Usage */}
         {message.tokenUsage && !message.isStreaming && (
@@ -76,6 +165,6 @@ export function Message({ message }: MessageProps) {
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   )
 }

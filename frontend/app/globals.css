@@ -1,68 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Streamdown - Include styles from node_modules for Tailwind JIT */
+@source "../node_modules/streamdown/dist/*.js";
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Kimi-inspired lime/green color scheme */
+    --background: 72 30% 98%;
+    --foreground: 72 10% 10%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 72 20% 96%;
+    --card-foreground: 72 10% 10%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 72 20% 96%;
+    --popover-foreground: 72 10% 10%;
 
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 72 100% 50%;
+    --primary-foreground: 72 100% 2%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 72 20% 92%;
+    --secondary-foreground: 72 10% 20%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 72 20% 92%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 72 100% 50%;
+    --accent-foreground: 72 100% 2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 217.2 91.2% 59.8%;
+    --border: 72 20% 88%;
+    --input: 72 20% 88%;
+    --ring: 72 100% 50%;
 
     --radius: 0.5rem;
+
+    /* Custom Kimi colors */
+    --lime: 72 100% 50%;
+    --dark-bg: #080a00;
+    --grid-dot: rgba(200, 255, 50, 0.15);
   }
 
   .dark {
-    --background: 222.2 47% 11.2%;
-    --foreground: 210 40% 98%;
+    --background: 72 30% 3%;
+    --foreground: 0 0% 98%;
 
-    --card: 222.2 47% 13%;
-    --card-foreground: 210 40% 98%;
+    --card: 72 25% 6%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 222.2 47% 13%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 72 25% 6%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 72 100% 50%;
+    --primary-foreground: 72 100% 2%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 72 30% 10%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 72 30% 10%;
+    --muted-foreground: 0 0% 60%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 72 100% 50%;
+    --accent-foreground: 72 100% 2%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 217.2 91.2% 59.8%;
+    --border: 72 20% 15%;
+    --input: 72 20% 15%;
+    --ring: 72 100% 50%;
   }
 }
 
@@ -72,7 +83,132 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Text balance for headings */
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+/* Custom Kimi utility classes */
+@layer utilities {
+  /* Lime text color */
+  .text-lime {
+    color: hsl(72 100% 50%);
+  }
+
+  /* Lime background */
+  .bg-lime {
+    background-color: hsl(72 100% 50%);
+  }
+
+  /* Lime border */
+  .border-lime {
+    border-color: hsl(72 100% 50%);
+  }
+
+  /* Glow effect for lime */
+  .glow-lime {
+    box-shadow:
+      0 0 20px hsl(72 100% 50% / 0.4),
+      0 0 40px hsl(72 100% 50% / 0.2),
+      0 0 60px hsl(72 100% 50% / 0.1);
+  }
+
+  /* Text glow for lime */
+  .text-glow-lime {
+    text-shadow:
+      0 0 10px hsl(72 100% 50% / 0.5),
+      0 0 20px hsl(72 100% 50% / 0.3),
+      0 0 30px hsl(72 100% 50% / 0.2);
+  }
+
+  /* Radial gradient utilities */
+  .bg-gradient-radial {
+    background: radial-gradient(circle at center, var(--tw-gradient-from), var(--tw-gradient-via, transparent), var(--tw-gradient-to, transparent));
+  }
+}
+
+/* Custom keyframe animations - Kimi style */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow:
+      0 0 20px hsl(72 100% 50% / 0.5),
+      0 0 40px hsl(72 100% 50% / 0.3),
+      0 0 60px hsl(72 100% 50% / 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 30px hsl(72 100% 50% / 0.7),
+      0 0 60px hsl(72 100% 50% / 0.5),
+      0 0 90px hsl(72 100% 50% / 0.3);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes shimmer-sweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer-sweep {
+  animation: shimmer-sweep 1.5s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s linear infinite;
+  background: linear-gradient(90deg, transparent 0%, hsl(var(--muted)) 50%, transparent 100%);
+  background-size: 200% 100%;
 }
 
 /* Prose styling for markdown content */
@@ -88,75 +224,204 @@
   @apply bg-transparent p-0;
 }
 
-/* Scrollbar styling */
+/* Custom scrollbar - Kimi style */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-transparent;
+  background: #080a00;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-border rounded-full;
+  background: hsl(72 100% 50% / 0.3);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-muted-foreground/30;
+  background: hsl(72 100% 50% / 0.5);
 }
 
-/* Custom animations */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-/* Radial gradient utilities */
-.bg-gradient-radial {
-  background: radial-gradient(circle at center, var(--tw-gradient-from), var(--tw-gradient-via, transparent), var(--tw-gradient-to, transparent));
-}
-
-/* Enhanced selection */
+/* Enhanced selection - lime */
 ::selection {
-  @apply bg-electric-500/30;
+  background: hsl(72 100% 50% / 0.3);
 }
 
-/* Focus ring customization */
+/* Focus ring customization - lime */
 *:focus-visible {
-  @apply outline-none ring-2 ring-electric-500/50 ring-offset-2 ring-offset-background;
+  @apply outline-none ring-2 ring-offset-2 ring-offset-background;
+  --tw-ring-color: hsl(72 100% 50% / 0.5);
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
+/* Streamdown content styling */
+.streamdown-content {
+  /* Ensure proper spacing for streamed content */
+  line-height: 1.7;
 }
 
-/* Text balance for headings */
-h1, h2, h3 {
-  text-wrap: balance;
+.streamdown-content p {
+  margin-bottom: 1rem;
 }
 
-/* Loading skeleton shimmer */
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+.streamdown-content p:last-child {
+  margin-bottom: 0;
 }
 
-.animate-shimmer {
-  animation: shimmer 2s linear infinite;
-  background: linear-gradient(90deg, transparent 0%, hsl(var(--muted)) 50%, transparent 100%);
-  background-size: 200% 100%;
+/* Code block wrapper (added by JS) */
+.code-block-wrapper {
+  @apply my-4 rounded-lg overflow-hidden border border-border/50;
+}
+
+.code-block-wrapper pre {
+  @apply my-0 border-0 rounded-none;
+}
+
+/* Code blocks in Streamdown (Shiki syntax highlighting) */
+.streamdown-content pre {
+  @apply bg-[#0d1117] rounded-lg p-4 overflow-x-auto my-4 border border-border/50;
+  font-size: 0.875rem;
+  counter-reset: line;
+}
+
+.streamdown-content pre code {
+  @apply bg-transparent p-0;
+  font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  display: block;
+}
+
+/* Line numbers for code (optional - add .with-line-numbers class) */
+.streamdown-content pre.with-line-numbers code .line::before {
+  counter-increment: line;
+  content: counter(line);
+  @apply inline-block w-8 mr-4 text-right text-muted-foreground/50 select-none;
+}
+
+/* Inline code */
+.streamdown-content code:not(pre code) {
+  @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
+  color: hsl(72 100% 45%);
+}
+
+/* Links */
+.streamdown-content a {
+  @apply text-lime hover:text-lime/80 underline underline-offset-2 transition-colors;
+}
+
+/* Lists */
+.streamdown-content ul,
+.streamdown-content ol {
+  @apply pl-6 my-4 space-y-2;
+}
+
+.streamdown-content ul {
+  list-style-type: disc;
+}
+
+.streamdown-content ul li::marker {
+  color: hsl(72 100% 50%);
+}
+
+.streamdown-content ol {
+  list-style-type: decimal;
+}
+
+.streamdown-content ol li::marker {
+  color: hsl(72 100% 50%);
+}
+
+/* Nested lists */
+.streamdown-content ul ul,
+.streamdown-content ol ol,
+.streamdown-content ul ol,
+.streamdown-content ol ul {
+  @apply my-2;
+}
+
+/* Blockquotes */
+.streamdown-content blockquote {
+  @apply border-l-4 border-lime/50 pl-4 italic text-muted-foreground my-4 bg-muted/30 py-2 pr-4 rounded-r;
+}
+
+/* Tables - Enhanced with zebra striping */
+.streamdown-content table {
+  @apply w-full border-collapse my-4 text-sm;
+}
+
+.streamdown-content th,
+.streamdown-content td {
+  @apply border border-border/50 px-4 py-2.5 text-left;
+}
+
+.streamdown-content th {
+  @apply bg-muted/70 font-semibold text-foreground;
+}
+
+/* Zebra striping */
+.streamdown-content tbody tr:nth-child(even) {
+  @apply bg-muted/20;
+}
+
+.streamdown-content tbody tr:hover {
+  @apply bg-muted/40 transition-colors;
+}
+
+/* Numeric columns align right */
+.streamdown-content td:has(> :only-child:is([data-numeric])),
+.streamdown-content td.numeric {
+  @apply text-right font-mono;
+}
+
+/* Headings in chat responses */
+.streamdown-content h1,
+.streamdown-content h2,
+.streamdown-content h3 {
+  @apply font-semibold mt-6 mb-3 text-foreground;
+}
+
+.streamdown-content h1 {
+  @apply text-xl border-b border-border/50 pb-2;
+}
+
+.streamdown-content h2 {
+  @apply text-lg;
+}
+
+.streamdown-content h3 {
+  @apply text-base text-lime/90;
+}
+
+/* Horizontal rules */
+.streamdown-content hr {
+  @apply my-6 border-border/50;
+}
+
+/* Math (KaTeX) styling */
+.streamdown-content .katex {
+  font-size: 1.1em;
+}
+
+.streamdown-content .katex-display {
+  @apply my-4 overflow-x-auto py-2;
+}
+
+/* Streaming cursor */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.streaming-cursor {
+  @apply inline-block w-2 h-5 bg-lime ml-0.5 rounded-sm;
+  animation: blink 1s step-end infinite;
+}
+
+/* Smooth content appearance during streaming */
+.streamdown-content > *:last-child {
+  animation: fade-in 0.15s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
 }

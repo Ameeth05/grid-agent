@@ -1,7 +1,6 @@
 import { ExternalLink, Calendar, Tag } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Footer } from '@/components/layout/Footer'
 
 // Mock news items
 const newsItems = [
@@ -62,34 +61,31 @@ const newsItems = [
 ]
 
 const categories = ['All', 'Regulatory', 'Queue Update', 'Market Data', 'Policy']
-const sources = ['All', 'FERC', 'PJM', 'MISO', 'ERCOT', 'SPP', 'NYISO', 'ISONE']
 
 export default function NewsPage() {
   return (
-    <>
-      <div className="container py-16 md:py-24 max-w-5xl">
+    <div className="h-full overflow-auto">
+      <div className="container py-8 max-w-4xl">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Grid News</h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">ISO News</h1>
+          <p className="text-muted-foreground">
             Stay updated with the latest developments in US grid interconnection
             and power markets.
           </p>
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-4 mb-8">
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={category === 'All' ? 'default' : 'outline'}
-                size="sm"
-              >
-                {category}
-              </Button>
-            ))}
-          </div>
+        <div className="flex flex-wrap gap-2 mb-6">
+          {categories.map((category) => (
+            <Button
+              key={category}
+              variant={category === 'All' ? 'default' : 'outline'}
+              size="sm"
+            >
+              {category}
+            </Button>
+          ))}
         </div>
 
         {/* News List */}
@@ -131,7 +127,7 @@ export default function NewsPage() {
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-center mt-12">
+        <div className="flex justify-center mt-8">
           <div className="flex items-center gap-2">
             <Button variant="outline" disabled>
               Previous
@@ -143,15 +139,14 @@ export default function NewsPage() {
         </div>
 
         {/* Note */}
-        <div className="mt-16 text-center py-12 px-8 rounded-2xl bg-muted/50 border">
-          <h3 className="text-xl font-semibold mb-2">Real-Time Updates Coming Soon</h3>
-          <p className="text-muted-foreground max-w-xl mx-auto">
+        <div className="mt-12 text-center py-8 px-6 rounded-xl bg-muted/50 border">
+          <h3 className="text-lg font-semibold mb-2">Real-Time Updates Coming Soon</h3>
+          <p className="text-muted-foreground text-sm max-w-lg mx-auto">
             We are building automated news aggregation from official ISO sources,
-            FERC filings, and industry publications. Stay tuned!
+            FERC filings, and industry publications.
           </p>
         </div>
       </div>
-      <Footer />
-    </>
+    </div>
   )
 }

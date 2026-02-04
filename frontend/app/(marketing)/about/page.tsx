@@ -103,14 +103,6 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* YC */}
-        <section className="text-center py-12 px-8 rounded-2xl bg-muted/50 border">
-          <h2 className="text-2xl font-bold mb-4">YC Spring 2026 Applicant</h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">
-            We are applying to Y Combinator Spring 2026 to accelerate our mission of
-            democratizing grid market intelligence.
-          </p>
-        </section>
       </div>
       <Footer />
     </>

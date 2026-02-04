@@ -3,6 +3,10 @@ E2B Sandbox Lifecycle Manager
 
 Handles creation, resumption, pausing, and cleanup of E2B sandboxes.
 Tracks active sandboxes in memory with optional Supabase persistence.
+
+Multi-tenant S3 Storage:
+- System bucket: Read-only shared data (PJM queue, cluster results)
+- User bucket: Read-write per-user data (uploads, analysis results)
 """
 
 import os
@@ -10,7 +14,7 @@ import asyncio
 import logging
 from typing import Optional, Dict, Any
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import uuid
 
 logger = logging.getLogger(__name__)
@@ -24,6 +28,14 @@ MAX_LIFETIME_HOURS = 24
 # Local development mode - set LOCAL_DEV=true to bypass E2B
 LOCAL_DEV = os.getenv("LOCAL_DEV", "false").lower() == "true"
 LOCAL_WS_URL = os.getenv("LOCAL_WS_URL", "ws://localhost:8080")
+
+# Supabase S3-compatible storage configuration
+# Format: https://<PROJECT_ID>.supabase.co/storage/v1/s3
+SUPABASE_S3_ENDPOINT = os.getenv("SUPABASE_S3_ENDPOINT")
+SUPABASE_S3_ACCESS_KEY = os.getenv("SUPABASE_S3_ACCESS_KEY")
+SUPABASE_S3_SECRET_KEY = os.getenv("SUPABASE_S3_SECRET_KEY")
+SUPABASE_SYSTEM_BUCKET = os.getenv("SUPABASE_SYSTEM_BUCKET", "gridagent-system")
+SUPABASE_USER_BUCKET = os.getenv("SUPABASE_USER_BUCKET", "gridagent-users")
 
 
 @dataclass
@@ -39,12 +51,12 @@ class SandboxInfo:
 
     def is_idle(self, idle_minutes: int = IDLE_TIMEOUT_MINUTES) -> bool:
         """Check if sandbox has been idle for too long."""
-        idle_threshold = datetime.utcnow() - timedelta(minutes=idle_minutes)
+        idle_threshold = datetime.now(timezone.utc) - timedelta(minutes=idle_minutes)
         return self.last_activity < idle_threshold
 
     def is_expired(self, max_hours: int = MAX_LIFETIME_HOURS) -> bool:
         """Check if sandbox has exceeded maximum lifetime."""
-        expiry_threshold = datetime.utcnow() - timedelta(hours=max_hours)
+        expiry_threshold = datetime.now(timezone.utc) - timedelta(hours=max_hours)
         return self.created_at < expiry_threshold
 
 
@@ -54,6 +66,7 @@ class SandboxManager:
 
     Features:
     - Create new sandboxes with environment variables
+    - Mount S3 storage (system read-only, user read-write)
     - Resume existing sandboxes by session_id
     - Pause idle sandboxes
     - Kill expired sandboxes
@@ -63,6 +76,13 @@ class SandboxManager:
     def __init__(self):
         self.e2b_api_key = os.getenv("E2B_API_KEY")
         self.anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
+
+        # S3 configuration
+        self.s3_endpoint = SUPABASE_S3_ENDPOINT
+        self.s3_access_key = SUPABASE_S3_ACCESS_KEY
+        self.s3_secret_key = SUPABASE_S3_SECRET_KEY
+        self.system_bucket = SUPABASE_SYSTEM_BUCKET
+        self.user_bucket = SUPABASE_USER_BUCKET
 
         # In-memory tracking of active sandboxes
         # Key: session_id, Value: SandboxInfo
@@ -78,6 +98,8 @@ class SandboxManager:
             logger.warning("E2B_API_KEY not set - sandbox creation will fail")
         if not self.anthropic_api_key:
             logger.warning("ANTHROPIC_API_KEY not set - agent will fail")
+        if not self.s3_endpoint:
+            logger.warning("SUPABASE_S3_ENDPOINT not set - S3 mounting disabled")
 
     def _validate_config(self) -> None:
         """Ensure required configuration is present."""
@@ -85,6 +107,82 @@ class SandboxManager:
             raise RuntimeError("E2B_API_KEY environment variable not set")
         if not self.anthropic_api_key:
             raise RuntimeError("ANTHROPIC_API_KEY environment variable not set")
+
+    def _has_s3_config(self) -> bool:
+        """Check if S3 configuration is available."""
+        return all([
+            self.s3_endpoint,
+            self.s3_access_key,
+            self.s3_secret_key,
+        ])
+
+    def _mount_s3_storage(self, sandbox: Any, user_id: str) -> bool:
+        """
+        Mount S3 storage buckets in the sandbox.
+
+        Mounts:
+        - System bucket at /system/data/ (read-only, shared)
+        - User bucket at /user/data/ (read-write, user-specific prefix)
+
+        Args:
+            sandbox: The E2B Sandbox instance
+            user_id: User ID for user-specific bucket prefix
+
+        Returns:
+            True if mounting succeeded, False otherwise
+        """
+        if not self._has_s3_config():
+            logger.info("S3 config not available, skipping S3 mount")
+            return False
+
+        try:
+            # Write S3 credentials file
+            creds_content = f"{self.s3_access_key}:{self.s3_secret_key}"
+            sandbox.files.write("/root/.passwd-s3fs", creds_content)
+            sandbox.commands.run("chmod 600 /root/.passwd-s3fs")
+
+            # Ensure mount directories exist and are empty
+            sandbox.commands.run("mkdir -p /system/data /user/data")
+
+            # Mount system bucket (read-only)
+            # -o ro: read-only mount
+            # -o allow_other: allow non-root access
+            # -o use_path_request_style: required for some S3-compatible endpoints
+            system_mount_cmd = (
+                f"s3fs {self.system_bucket} /system/data "
+                f"-o url={self.s3_endpoint} "
+                f"-o passwd_file=/root/.passwd-s3fs "
+                f"-o ro "
+                f"-o allow_other "
+                f"-o use_path_request_style"
+            )
+            result = sandbox.commands.run(system_mount_cmd)
+            if result.exit_code != 0:
+                logger.error(f"Failed to mount system bucket: {result.stderr}")
+                return False
+            logger.info(f"Mounted system bucket at /system/data/")
+
+            # Mount user bucket with user-specific prefix (read-write)
+            # Using path prefix to isolate user data: bucket:/users/<user_id>/
+            user_mount_cmd = (
+                f"s3fs {self.user_bucket}:/users/{user_id} /user/data "
+                f"-o url={self.s3_endpoint} "
+                f"-o passwd_file=/root/.passwd-s3fs "
+                f"-o allow_other "
+                f"-o use_path_request_style"
+            )
+            result = sandbox.commands.run(user_mount_cmd)
+            if result.exit_code != 0:
+                logger.error(f"Failed to mount user bucket: {result.stderr}")
+                # System mount succeeded, so partial success
+                return True
+            logger.info(f"Mounted user bucket at /user/data/ (prefix: /users/{user_id})")
+
+            return True
+
+        except Exception as e:
+            logger.error(f"Error mounting S3 storage: {e}")
+            return False
 
     async def create_sandbox(
         self,
@@ -121,8 +219,8 @@ class SandboxManager:
                 session_id=session_id,
                 user_id=user_id,
                 ws_url=ws_url,
-                created_at=datetime.utcnow(),
-                last_activity=datetime.utcnow(),
+                created_at=datetime.now(timezone.utc),
+                last_activity=datetime.now(timezone.utc),
                 sandbox=None,  # No actual sandbox in local mode
             )
             async with self._lock:
@@ -154,21 +252,28 @@ class SandboxManager:
             host = sandbox.get_host(SANDBOX_PORT)
             ws_url = f"wss://{host}"
 
+            # Mount S3 storage (non-blocking, failures logged but don't stop sandbox)
+            s3_mounted = self._mount_s3_storage(sandbox, user_id)
+            if s3_mounted:
+                logger.info("S3 storage mounted successfully")
+            else:
+                logger.info("S3 storage not mounted (config missing or mount failed)")
+
             # Track the sandbox
             sandbox_info = SandboxInfo(
                 sandbox_id=sandbox.id,
                 session_id=session_id,
                 user_id=user_id,
                 ws_url=ws_url,
-                created_at=datetime.utcnow(),
-                last_activity=datetime.utcnow(),
+                created_at=datetime.now(timezone.utc),
+                last_activity=datetime.now(timezone.utc),
                 sandbox=sandbox,
             )
 
             async with self._lock:
                 self._sandboxes[session_id] = sandbox_info
 
-            logger.info(f"Sandbox created: id={sandbox.id}, ws_url={ws_url}")
+            logger.info(f"Sandbox created: id={sandbox.id}, ws_url={ws_url}, s3={s3_mounted}")
 
             return ws_url, session_id
 
@@ -200,7 +305,7 @@ class SandboxManager:
             return None
 
         # Update last activity
-        sandbox_info.last_activity = datetime.utcnow()
+        sandbox_info.last_activity = datetime.now(timezone.utc)
 
         logger.info(f"Resuming sandbox for session: {session_id}")
         return sandbox_info.ws_url
@@ -263,7 +368,7 @@ class SandboxManager:
         async with self._lock:
             sandbox_info = self._sandboxes.get(session_id)
             if sandbox_info:
-                sandbox_info.last_activity = datetime.utcnow()
+                sandbox_info.last_activity = datetime.now(timezone.utc)
 
     async def cleanup_idle_sandboxes(self) -> int:
         """
