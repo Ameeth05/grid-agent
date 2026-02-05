@@ -1,9 +1,9 @@
 # GridAgent E2B Sandbox Template
 # Using Claude Agent SDK (bundles CLI automatically since v0.1.8+)
 #
-# BUILD CONTEXT: This Dockerfile is built from the e2b-template/ directory.
-# Before building, run the data sync script to populate system/data/ and system/docs/
-# Example: python sync_data.py (or manually copy files from ../Data/)
+# Data files are mounted at runtime from Supabase S3:
+# - /system/data/ and /system/docs/ are mounted from gridagent-system bucket
+# - /user/data/ is mounted from gridagent-users bucket (per-user prefix)
 
 FROM python:3.12-slim
 
@@ -33,23 +33,13 @@ RUN echo "user_allow_other" >> /etc/fuse.conf
 # NOTE: Node.js and Claude Code CLI are NOT needed!
 # The claude-agent-sdk Python package bundles the CLI automatically (since v0.1.8+).
 
-# Create directory structure with proper organization:
-# /system/          - Read-only system files (enforced by agent logic)
-#   /system/skills/ - Skill markdown files
-#   /system/data/   - Pre-loaded grid data (CSV, JSON)
-#     /system/data/Interconnection Queue/  - PJM queue data
-#     /system/data/Cluster Results/        - Phase study results
-#   /system/docs/   - Reference documentation (PDFs, manuals)
-#     /system/docs/Interconnection Manual/ - PJM manuals
-# /user/           - Read-write user files
-#   /user/uploads/ - Files uploaded by users
-#   /user/results/ - Analysis outputs
-# /app/            - Application code
-RUN mkdir -p /system/skills \
-    && mkdir -p "/system/data/Interconnection Queue" \
-    && mkdir -p "/system/data/Cluster Results/TC2 Phase 1" \
-    && mkdir -p "/system/docs/Interconnection Manual/Manual 14A" \
-    && mkdir -p /user/uploads /user/results \
+# Create directory structure (mount points for S3 at runtime):
+# /system/data/   - Mounted from gridagent-system bucket (read-only)
+# /system/docs/   - Mounted from gridagent-system bucket (read-only)
+# /user/data/     - Mounted from gridagent-users bucket (read-write)
+# /app/           - Application code
+RUN mkdir -p /system/data /system/docs \
+    && mkdir -p /user/data /user/uploads /user/results \
     && mkdir -p /app
 
 # Set permissions:
@@ -63,20 +53,9 @@ RUN chmod -R 755 /system \
 COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Copy system files in order of change frequency (for optimal caching):
-# 1. Skills (change rarely)
-COPY system/skills/ /system/skills/
-
-# 2. Data files (change occasionally) - these should be synced before build
-# If system/data/ is empty, the agent will still work but have no pre-loaded data
-COPY system/data/ /system/data/
-
-# 3. Documentation (change rarely)
-COPY system/docs/ /system/docs/
-
-# 4. Application code (changes frequently)
+# Copy application code only
+# System data files (skills, data, docs) are mounted at runtime from S3
 COPY gridagent_server.py /app/gridagent_server.py
-COPY gridagent_server_sse.py /app/gridagent_server_sse.py
 
 # Set working directory
 WORKDIR /app
@@ -93,9 +72,5 @@ EXPOSE 8080
 # - SESSION_ID: For session persistence across connections
 # - GRIDAGENT_MODEL: Override default model (default: claude-sonnet-4-20250514)
 
-# Health check via HTTP endpoint (gridagent_server.py handles /health)
-HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
-
-# Start the WebSocket server using the main server
+# Start the WebSocket server
 CMD ["python", "/app/gridagent_server.py"]
