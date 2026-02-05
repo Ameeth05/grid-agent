@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { LogIn, Loader2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -27,6 +28,7 @@ export function SignInButton({ className }: SignInButtonProps) {
   const [password, setPassword] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
 
   const { signInWithEmail, signUpWithEmail } = useAuth()
 
@@ -42,6 +44,7 @@ export function SignInButton({ className }: SignInButtonProps) {
       } else {
         await signInWithEmail(email, password)
         setOpen(false)
+        router.push('/chat')
       }
     } catch (err: any) {
       setError(err.message || 'Authentication failed')

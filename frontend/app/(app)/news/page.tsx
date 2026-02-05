@@ -1,6 +1,10 @@
-import { ExternalLink, Calendar, Tag } from 'lucide-react'
+'use client'
+
+import { useState } from 'react'
+import { ExternalLink, Calendar, Tag, Lock } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { DemoRequestForm } from '@/components/landing/DemoRequestForm'
 
 // Mock news items
 const newsItems = [
@@ -11,7 +15,6 @@ const newsItems = [
     date: '2026-01-29',
     category: 'Regulatory',
     excerpt: 'FERC has approved a $5.2 billion transmission expansion project in PJM, expected to unlock 15 GW of renewable capacity.',
-    url: '#',
   },
   {
     id: '2',
@@ -20,7 +23,6 @@ const newsItems = [
     date: '2026-01-28',
     category: 'Queue Update',
     excerpt: 'MISO announces revised timeline for 2026 cluster studies, with Phase 1 results expected by Q3.',
-    url: '#',
   },
   {
     id: '3',
@@ -29,7 +31,6 @@ const newsItems = [
     date: '2026-01-27',
     category: 'Market Data',
     excerpt: 'ERCOT reports 2.5 GW of new battery storage capacity came online in January 2026, a new monthly record.',
-    url: '#',
   },
   {
     id: '4',
@@ -38,34 +39,18 @@ const newsItems = [
     date: '2026-01-25',
     category: 'Policy',
     excerpt: 'SPP files proposal with FERC to implement new queue management procedures aimed at reducing study timelines.',
-    url: '#',
-  },
-  {
-    id: '5',
-    title: 'PJM Capacity Auction Results Released',
-    source: 'PJM',
-    date: '2026-01-23',
-    category: 'Market Data',
-    excerpt: 'PJM releases Base Residual Auction results for 2029/2030, showing increased clearing prices in most zones.',
-    url: '#',
-  },
-  {
-    id: '6',
-    title: 'NYISO Updates Large Facility Interconnection Procedures',
-    source: 'NYISO',
-    date: '2026-01-20',
-    category: 'Regulatory',
-    excerpt: 'NYISO implements revised LFIP with new provisions for energy storage and hybrid projects.',
-    url: '#',
   },
 ]
 
 const categories = ['All', 'Regulatory', 'Queue Update', 'Market Data', 'Policy']
 
 export default function NewsPage() {
+  const [demoOpen, setDemoOpen] = useState(false)
+
   return (
-    <div className="h-full overflow-auto">
-      <div className="container py-8 max-w-4xl">
+    <div className="h-full overflow-auto relative">
+      {/* Blurred Content */}
+      <div className="container py-8 max-w-4xl blur-sm pointer-events-none select-none">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">ISO News</h1>
@@ -110,10 +95,8 @@ export default function NewsPage() {
                     </div>
                     <CardTitle className="text-lg">{item.title}</CardTitle>
                   </div>
-                  <Button variant="ghost" size="icon" className="shrink-0" asChild>
-                    <a href={item.url} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
+                  <Button variant="ghost" size="icon" className="shrink-0">
+                    <ExternalLink className="h-4 w-4" />
                   </Button>
                 </div>
               </CardHeader>
@@ -125,28 +108,35 @@ export default function NewsPage() {
             </Card>
           ))}
         </div>
+      </div>
 
-        {/* Pagination */}
-        <div className="flex justify-center mt-8">
-          <div className="flex items-center gap-2">
-            <Button variant="outline" disabled>
-              Previous
-            </Button>
-            <Button variant="outline">
-              Next
-            </Button>
+      {/* Coming Soon Overlay */}
+      <div className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-[2px]">
+        <div className="text-center p-8 max-w-md">
+          <div className="w-16 h-16 rounded-full bg-lime/10 flex items-center justify-center mx-auto mb-6">
+            <Lock className="w-8 h-8 text-lime" />
           </div>
-        </div>
-
-        {/* Note */}
-        <div className="mt-12 text-center py-8 px-6 rounded-xl bg-muted/50 border">
-          <h3 className="text-lg font-semibold mb-2">Real-Time Updates Coming Soon</h3>
-          <p className="text-muted-foreground text-sm max-w-lg mx-auto">
-            We are building automated news aggregation from official ISO sources,
-            FERC filings, and industry publications.
+          <h2 className="text-3xl font-bold mb-3">Coming Soon</h2>
+          <p className="text-muted-foreground mb-6">
+            Real-time ISO news aggregation from FERC, PJM, MISO, ERCOT, SPP, NYISO,
+            and other official sources. Get personalized alerts for your portfolio.
           </p>
+          <Button
+            size="lg"
+            className="bg-lime hover:bg-lime/90 text-black font-semibold"
+            onClick={() => setDemoOpen(true)}
+          >
+            Request Demo
+          </Button>
         </div>
       </div>
+
+      {/* Demo Request Form */}
+      <DemoRequestForm
+        open={demoOpen}
+        onOpenChange={setDemoOpen}
+        source="landing"
+      />
     </div>
   )
 }
