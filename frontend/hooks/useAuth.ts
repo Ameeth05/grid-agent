@@ -50,7 +50,15 @@ export function useAuth() {
       return
     }
 
-    if (!supabase) return
+    // If Supabase client failed to initialize (missing env vars), stop loading
+    if (!supabase) {
+      setState(prev => ({
+        ...prev,
+        loading: false,
+        error: new Error('Supabase not configured. Check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.'),
+      }))
+      return
+    }
 
     // Get initial session
     const getInitialSession = async () => {
