@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { User, Session, AuthChangeEvent } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/client'
 
@@ -41,8 +41,8 @@ export function useAuth() {
     error: null,
   })
 
-  // Skip Supabase client creation in LOCAL_DEV mode
-  const supabase = LOCAL_DEV ? null : createClient()
+  // Use singleton Supabase client (memoized to prevent re-creation)
+  const supabase = useMemo(() => LOCAL_DEV ? null : createClient(), [])
 
   useEffect(() => {
     // LOCAL_DEV: Already have mock user, skip Supabase
@@ -98,23 +98,6 @@ export function useAuth() {
 
     return () => {
       subscription.unsubscribe()
-    }
-  }, [supabase])
-
-  const signInWithGoogle = useCallback(async () => {
-    if (LOCAL_DEV || !supabase) {
-      console.log('LOCAL_DEV: signInWithGoogle is a no-op')
-      return
-    }
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    })
-
-    if (error) {
-      setState(prev => ({ ...prev, error }))
     }
   }, [supabase])
 
@@ -176,7 +159,6 @@ export function useAuth() {
 
   return {
     ...state,
-    signInWithGoogle,
     signInWithEmail,
     signUpWithEmail,
     signOut,
