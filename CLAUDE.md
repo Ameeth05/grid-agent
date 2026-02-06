@@ -3,47 +3,38 @@
 ## Mission
 AI research agent for US Power Markets.
 
-## Recent Updates (Feb 3, 2026)
+## Recent Updates (Feb 6, 2026)
 
-### User Journey Implementation (COMPLETE)
+### E2B Sandbox Template (DEPLOYED)
+- **Template ID**: `sh4267qdwkyu8vb834jb`
+- **Build**: Cloud build via `e2b template build` (no local Docker needed)
+- **Runtime Mounts**: S3 buckets mounted at runtime, not baked into image
+- **e2b.toml**: Updated to v2 format with team_id
+
+### Authentication Simplification (COMPLETE)
+- **Removed Google OAuth** - Email/password only
+- **Fixed infinite loop** - Supabase client singleton pattern
+- **Sign-in redirect** - Users go to `/chat` after authentication
+- **Supabase SSR** - Using `@supabase/ssr` with proper cookie handling
+
+### Navigation Cleanup (COMPLETE)
+- **Main Header**: Only "About" link (near Request Demo + Sign In)
+- **Removed from nav**: ISO-News, Dashboard
+- **Coming Soon pages**: `/news` and `/watchlist` have blur overlays with Request Demo CTA
+- **AppSidebar**: Still has Chat/News/Dashboard for authenticated users
+
+### Previous Updates (Feb 3, 2026)
 - **Route Groups**: `(marketing)/` for public pages, `(app)/` for authenticated
-- **Header**: Both "Request Demo" + "Sign In" buttons
-- **AppSidebar**: Collapsible with Chat/News/Dashboard nav + UserProfile
-- **AuthGuard**: Protects `/chat`, `/news`, `/watchlist` routes
 - **DemoRequestForm**: Connected to Supabase `demo_requests` table
-
-### Supabase Database Setup (COMPLETE)
-- **Project**: Grid Agent (`hobdmhagohdosgyavifp`) - US East 1
-- **Table**: `demo_requests` with RLS enabled
-- **Policy**: Anyone can insert (lead capture)
-- **Frontend .env.local**: Updated with real credentials
-
-### Frontend Performance Optimization
-- Removed Framer Motion from most components (~200KB savings)
-- Kept Framer Motion only in Hero.tsx for rotating text animation
-- Replaced with CSS animations (animate-fade-in, animate-slide-up)
-- Fixed canvas color bug in GridAnimation.tsx
-- Updated navigation: About, ISO-News, Dashboard
-
-### Local Testing Infrastructure (COMPLETE)
-- **Backend Tests**: 30 pytest tests (test_main.py, test_auth.py)
-- **Test Runner**: `test-local.ps1` script for one-command testing
-- **Fixtures**: Mocked E2B SDK and Supabase JWT in conftest.py
+- **Streamdown**: Vercel's AI-optimized markdown renderer
 - **LOCAL_DEV Mode**: Bypasses real services for safe local testing
-
-### Chat UI Upgrade with Streamdown (COMPLETE)
-- **Streamdown**: Vercel's AI-optimized markdown renderer (v2.1.0)
-- **Plugins**: @streamdown/code (Shiki), @streamdown/math (KaTeX)
-- **New Components**: StreamdownMessage, MessageActions, Citations
-- **Features**: Syntax highlighting, copy button, citation parsing
-- **Build**: Frontend builds successfully (476KB chat page)
 
 ## Deployment Status
 | Platform | Component | Status |
 |----------|-----------|--------|
-| Vercel | Frontend | PENDING |
+| Vercel | Frontend | DEPLOYED |
 | Railway | Backend | PENDING |
-| E2B | Sandbox Template | PENDING |
+| E2B | Sandbox Template | DEPLOYED (`sh4267qdwkyu8vb834jb`) |
 | Supabase | Database | CONFIGURED |
 
 ## Architecture
@@ -69,7 +60,7 @@ Frontend (Vercel) <--> E2B Sandbox (WebSocket:8080) <--> Backend (Railway)
 3. **Verify integration points** match other components
 
 ### Orchestrator Review Checklist
-- [ ] Template ID "gridagent" consistent across e2b.toml, sandbox_manager.py
+- [ ] Template ID "sh4267qdwkyu8vb834jb" consistent across e2b.toml, sandbox_manager.py
 - [ ] Port 8080 consistent across all files
 - [ ] CORS uses `allow_origin_regex` (not wildcards)
 - [ ] No TypeScript/Python errors
@@ -100,7 +91,7 @@ allow_origins=["https://*.vercel.app"]  # WRONG - wildcards don't work
 ## Integration Points
 | Source | Target | Value |
 |--------|--------|-------|
-| e2b.toml | sandbox_manager.py | template_id = "gridagent" |
+| e2b.toml | sandbox_manager.py | template_id = "sh4267qdwkyu8vb834jb" |
 | Backend /api/start-session | Frontend | ws_url |
 | E2B Sandbox | Frontend | WebSocket port 8080 |
 | Supabase S3 | Sandbox /system/data/ | gridagent-system bucket (read-only) |
