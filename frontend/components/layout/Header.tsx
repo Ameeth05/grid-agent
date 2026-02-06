@@ -14,12 +14,6 @@ import { UserProfile } from '@/components/auth/UserProfile'
 import { DemoRequestForm } from '@/components/landing/DemoRequestForm'
 import { useAuth } from '@/hooks/useAuth'
 
-const navLinks = [
-  { href: '/about', label: 'About' },
-  { href: '/news', label: 'ISO-News' },
-  { href: '/watchlist', label: 'Dashboard' },
-]
-
 export function Header() {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -63,39 +57,26 @@ export function Header() {
           </span>
         </Link>
 
-        {/* Desktop Navigation - Kimi style with underline animation */}
-        <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="group relative px-4 py-2 text-sm font-medium transition-colors"
-            >
-              <span className={cn(
-                'transition-colors duration-300',
-                pathname === link.href
-                  ? 'text-lime'
-                  : 'text-muted-foreground group-hover:text-foreground'
-              )}>
-                {link.label}
-              </span>
-              {/* Underline animation */}
-              <span
-                className={cn(
-                  'absolute bottom-0 left-4 right-4 h-px bg-lime transition-all duration-300',
-                  pathname === link.href ? 'w-[calc(100%-2rem)]' : 'w-0 group-hover:w-[calc(100%-2rem)]'
-                )}
-              />
-            </Link>
-          ))}
-        </nav>
+        {/* Spacer to push right side items */}
+        <div className="flex-1" />
 
         {/* Right side actions */}
         <div className="flex items-center gap-3">
           <ThemeToggle />
 
-          {/* Auth buttons - Kimi style */}
+          {/* Navigation and Auth buttons inline */}
           <div className="hidden md:flex items-center gap-3">
+            <Link
+              href="/about"
+              className={cn(
+                'px-4 py-2 text-sm font-medium transition-colors duration-300',
+                pathname === '/about'
+                  ? 'text-lime'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
+            >
+              About
+            </Link>
             {isAuthenticated ? (
               <UserProfile user={user} />
             ) : (
@@ -135,21 +116,18 @@ export function Header() {
         )}
       >
         <nav className="container py-4 flex flex-col gap-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className={cn(
-                'px-4 py-3 text-sm font-medium rounded-lg transition-all duration-300',
-                pathname === link.href
-                  ? 'bg-lime/10 text-lime'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
+          <Link
+            href="/about"
+            onClick={() => setMobileMenuOpen(false)}
+            className={cn(
+              'px-4 py-3 text-sm font-medium rounded-lg transition-all duration-300',
+              pathname === '/about'
+                ? 'bg-lime/10 text-lime'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+            )}
+          >
+            About
+          </Link>
 
           <div className="pt-4 px-4 border-t border-lime-500/10 mt-2 space-y-3">
             {isAuthenticated ? (
