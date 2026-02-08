@@ -184,23 +184,23 @@ export function ThesisPage() {
               </h2>
               <p>
                 At GridAgent, we&apos;re automating research and rebuilding the
-                workflow around it. Think of us as your 24/7 AI agent built
-                specifically for US power market analysis. Our moat sits in two
-                tightly connected layers:
+                workflow around it. Think of us as your 24/7 AI agent being
+                built specifically for US power market analysis. Our moat sits
+                in two tightly connected layers:
               </p>
 
               <div className="thesis-pullquote">
                 This isn&apos;t off-the-shelf AI. Anyone can call an LLM API.
-                What makes GridAgent different is the full ecosystem we&apos;ve
-                built.
+                What makes GridAgent different is the full ecosystem we&apos;re
+                building.
               </div>
 
               <p>
                 <strong>The data transformation layer.</strong> AI agents are
-                only as good as the context they can actually use. We take
-                messy, unstructured power market data from dozens of sources and
-                turn it into clean, structured, interconnected, AI-literate
-                context that models can truly reason over.
+                only as good as the context they can actually use. We&apos;re
+                taking messy, unstructured power market data from dozens of
+                sources and turning it into clean, structured, interconnected,
+                AI-literate context that models can truly reason over.
               </p>
               <p>
                 <strong>The intelligence layer.</strong> We&apos;ve broken down
@@ -213,10 +213,11 @@ export function ThesisPage() {
               </p>
               <p>
                 What makes GridAgent different is the full ecosystem:
-                proprietary data pipelines, custom skills trained rigorously on
-                real power-market problems, intuitive UX that lets humans and AI
-                work together seamlessly, and reliability engineered for an
-                industry that doesn&apos;t forgive mistakes.
+                proprietary data pipelines, custom skills being writen
+                rigorously on real power-market problems, intuitive UX that will
+                let humans and AI work together seamlessly, and reliability
+                being engineered for an industry that doesn&apos;t forgive
+                mistakes.
               </p>
             </section>
 
@@ -260,11 +261,11 @@ export function ThesisPage() {
                 Close the Intelligence Gap
               </h2>
               <p>
-                GridAgent helps decision-makers reclaim hours for high-level
-                strategy, helps developers pick sites with real risk-adjusted
-                visibility, and gives investors sharper edges in portfolio
-                decisions. We don&apos;t replace experts. We amplify them and
-                close the intelligence gap at scale.
+                GridAgent will help decision-makers reclaim hours for high-level
+                strategy, help developers pick sites with real risk-adjusted
+                visibility, and give investors sharper edges in portfolio
+                decisions. We won&apos;t replace experts. We will amplify them
+                and close the intelligence gap at scale.
               </p>
               <p>
                 If you&apos;re a developer, analyst, or investor trying to

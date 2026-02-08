@@ -56,8 +56,8 @@ export function LandingPage() {
           <div className="landing-body-grid">
             <div className="v-flex" style={{ gap: "1rem" }}>
               <p className="landing-body-text">
-                We turn fragmented grid, interconnection, and market data into
-                clear, actionable answers.
+                We&apos;re building a system to turn fragmented grid,
+                interconnection, and market data into clear, actionable answers.
               </p>
               <p className="landing-body-text">
                 Evaluate projects faster, reduce risk, and allocate capital with
@@ -93,7 +93,7 @@ export function LandingPage() {
                 >
                   THE CHALLENGE
                 </h3>
-                <p className="landing-body-text" style={{ fontSize: "0.9rem" }}>
+                <p className="landing-body-text">
                   Power market data is fragmented across queue reports,
                   regulatory filings, and market datasets. Developers and
                   investors spend weeks analyzing this information manually.
@@ -112,11 +112,12 @@ export function LandingPage() {
                 >
                   WHAT WE&apos;RE BUILDING
                 </h3>
-                <p className="landing-body-text" style={{ fontSize: "0.9rem" }}>
-                  GridAgent structures power market data into machine-readable
-                  context. Our decision agents answer questions about project
-                  risks, timelines, and constraints with citations. This speeds
-                  up analysis from weeks to seconds.
+                <p className="landing-body-text">
+                  GridAgent is structuring power market data into
+                  machine-readable context. Our decision agents are being built
+                  to answer questions about project risks, timelines, and
+                  constraints with citations. This will speed up analysis from
+                  weeks to seconds.
                 </p>
               </div>
 
@@ -131,7 +132,7 @@ export function LandingPage() {
                 >
                   WHO WE ARE
                 </h3>
-                <p className="landing-body-text" style={{ fontSize: "0.9rem" }}>
+                <p className="landing-body-text">
                   We combine experience in power markets, grid engineering, and
                   AI systems. One founder works in energy markets analysis in
                   the U.S., focusing on interconnection, market dynamics, and
