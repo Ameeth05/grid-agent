@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "figma": {
+      "type": "http",
+      "url": "https://figma.com/mcp"
+    },
+    "firecrawl": {
+      "command": "npx.cmd",
+      "args": ["-y", "firecrawl-mcp"],
+      "env": {
+        "FIRECRAWL_API_KEY": "fc-c59f4587bdc14ad48b56905db2f1ad8a"
+      }
+    }
+  }
+}

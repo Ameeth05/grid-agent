@@ -8,7 +8,7 @@ const blogPosts = [
   {
     id: '1',
     title: 'Understanding PJM Cluster Study Results: A Deep Dive',
-    excerpt: 'A comprehensive guide to interpreting cluster study results and understanding network upgrade cost allocations in PJM.',
+    excerpt: 'A comprehensive guide to interpreting cluster study results and understanding transmission network upgrades cost allocations in PJM.',
     author: 'GridAgent Team',
     date: '2026-01-28',
     readTime: '8 min read',

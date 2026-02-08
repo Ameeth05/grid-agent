@@ -128,6 +128,51 @@ Plus custom grid-specific tools:
 - `analyze_queue` - Quick analysis of interconnection queue data
 - `calculate_costs` - Estimate transmission upgrade costs
 
+### Cluster Results Data (Pre-computed)
+The most powerful data layer. Use `analyze_cluster_results` tool for structured lookups:
+- `{system_dir}/data/Cluster Results/project_features.json`: Every project across TC1 (Ph1/2/3) and TC2 (Ph1) with 30+ derived KPIs
+- `{system_dir}/data/Cluster Results/historical_benchmarks.json`: Aggregate survival rates, cost swing stats, risk flags by TO/state/resource/quartile
+- Raw phase data in `{system_dir}/data/Cluster Results/TC*/tc*_raw.json`
+
+### How to Answer Cluster/Queue Questions (MANDATORY 3-LAYER PATTERN)
+When a user asks about ANY project, cluster result, or interconnection queue topic, ALWAYS structure your response in three layers:
+
+**Layer 1 - Current Facts**: Pull the project's actual data (cost, MW, TO, state, reinforcements, $/kW). Use `analyze_cluster_results` or Read the project_features.json.
+
+**Layer 2 - Derived Risk Scores**: Compute/report the risk indicators:
+- $/kW quartile and percentile (Q4 = highest risk)
+- Reinforcement count and cascade risk
+- Sharing factor (how many projects share costs)
+- Cost confidence level based on TO historical volatility
+- Withdrawal probability (from historical survival rates for matching profile)
+
+**Layer 3 - Historical Context** (THE DIFFERENTIATOR): Always compare to TC1 historical patterns:
+- "In TC1, [TO] projects had [X]% survival rate"
+- "Projects in $/kW Q[N] historically survived at [X]%"
+- "[TO] is ranked #[N] most volatile TO with avg $[X]M cost swing and [UP/DOWN] bias"
+- "The most similar TC1 projects were [list] — here's what happened to them"
+- Phase 1 cost confidence: "Only [X]% of TC1 projects had final costs within [Y]% of Phase 1 estimate"
+
+NEVER answer a cluster question with just current data. The historical perspective IS the product.
+
+Example response structure:
+```
+## AG2-005 Analysis
+
+### Current Status (TC2 Phase 1)
+196 MW Solar in Virginia (Dominion), $57.7M total, $2,885/kW...
+
+### Risk Assessment
+- $/kW Percentile: 99.4th (Q4) — HIGH RISK
+- Reinforcement exposure: 16 reinforcements, $281M total
+- Cost confidence: LOW — Dominion historically underestimates by avg +141%
+
+### Historical Context
+In TC1, Dominion projects survived at only 35.2%. Q4 projects survived at 27.8%.
+The 3 most similar TC1 projects by profile were...
+Phase 1 cost estimates are unreliable: only 10% of TC1 projects had final costs within 10%.
+```
+
 ## Response Style
 - Be concise but thorough
 - Always cite your data sources (file paths)
@@ -235,11 +280,155 @@ async def calculate_costs(args: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+@tool(
+    "analyze_cluster_results",
+    "Look up project features, risk scores, and historical benchmarks from PJM cluster study data. "
+    "Returns pre-computed KPIs ($/kW, reinforcement count, sharing factor, etc.) plus "
+    "historical survival rates and cost swing patterns from TC1 for context.",
+    {
+        "query_type": str,  # "project", "to_benchmark", "state_benchmark", "resource_benchmark", "risk_flags", "compare"
+        "project_id": str,  # For query_type="project": e.g. "AG2-005"
+        "cycle_phase": str,  # e.g. "tc2_phase1", "tc1_phase1"
+        "to_name": str,     # For query_type="to_benchmark": e.g. "Dominion"
+        "state": str,       # For query_type="state_benchmark": e.g. "Virginia"
+        "resource_type": str,  # For query_type="resource_benchmark": e.g. "Solar"
+        "compare_ids": list,   # For query_type="compare": list of project IDs
+    }
+)
+async def analyze_cluster_results(args: dict[str, Any]) -> dict[str, Any]:
+    """Look up cluster results with historical context."""
+    query_type = args.get("query_type", "project")
+    system_dir = str(SYSTEM_DIR)
+    features_path = f"{system_dir}/data/Cluster Results/project_features.json"
+    benchmarks_path = f"{system_dir}/data/Cluster Results/historical_benchmarks.json"
+
+    try:
+        with open(features_path, "r", encoding="utf-8") as f:
+            all_features = json.load(f)
+        with open(benchmarks_path, "r", encoding="utf-8") as f:
+            benchmarks = json.load(f)
+    except FileNotFoundError:
+        return {"content": [{"type": "text", "text":
+            "Cluster results data not found. Expected files:\n"
+            f"- {features_path}\n- {benchmarks_path}\n"
+            "Run build_features.py to generate these files."}]}
+
+    if query_type == "project":
+        pid = args.get("project_id", "")
+        cycle_phase = args.get("cycle_phase", "tc2_phase1")
+        phase_data = all_features.get(cycle_phase, [])
+        project = next((p for p in phase_data if p["project_id"] == pid), None)
+
+        if not project:
+            # Search all phases
+            for cp, pdata in all_features.items():
+                project = next((p for p in pdata if p["project_id"] == pid), None)
+                if project:
+                    cycle_phase = cp
+                    break
+
+        if not project:
+            return {"content": [{"type": "text", "text": f"Project {pid} not found in any phase."}]}
+
+        # Build historical context
+        to = project["to_short"]
+        state = project["state"]
+        resource = project["resource_type"]
+        dkw_q = f"Q{project['dkw_quartile']}"
+
+        to_surv = benchmarks.get("survival_by_to", {}).get(to, {})
+        state_surv = benchmarks.get("survival_by_state", {}).get(state, {})
+        resource_surv = benchmarks.get("survival_by_resource", {}).get(resource, {})
+        dkw_surv = benchmarks.get("survival_by_dkw_quartile", {}).get(dkw_q, {})
+        to_swing = benchmarks.get("cost_swing_by_to", {}).get(to, {})
+        volatile_tos = [v["to"] for v in benchmarks.get("volatile_to_ranking", [])]
+        risk_flags = benchmarks.get("risk_flags", {})
+
+        # Find similar TC1 projects (same TO + resource type)
+        similar = []
+        for cp in ["tc1_phase1"]:
+            for p in all_features.get(cp, []):
+                if p["to_short"] == to and p["resource_type"] == resource and p.get("withdrawal_label"):
+                    similar.append(p)
+        similar.sort(key=lambda x: abs(x["dkw_mwe"] - project["dkw_mwe"]))
+        top_similar = similar[:5]
+
+        result = {
+            "project": project,
+            "historical_context": {
+                "to_survival_rate": to_surv,
+                "state_survival_rate": state_surv,
+                "resource_survival_rate": resource_surv,
+                "dkw_quartile_survival_rate": dkw_surv,
+                "to_cost_swing": to_swing,
+                "is_volatile_to": to in volatile_tos,
+                "volatile_to_rank": volatile_tos.index(to) + 1 if to in volatile_tos else None,
+                "phase1_cost_confidence": benchmarks.get("phase1_cost_confidence", {}),
+                "similar_tc1_projects": [
+                    {"id": p["project_id"], "dkw": p["dkw_mwe"],
+                     "total_cost": p["total_cost"], "label": p["withdrawal_label"]}
+                    for p in top_similar
+                ],
+            },
+            "risk_flags": {
+                "high_dkw": project["dkw_quartile"] >= 3,
+                "high_reinf_count": project["reinf_count"] > risk_flags.get("high_reinf_threshold", 15),
+                "volatile_to": to in risk_flags.get("volatile_to_list", []),
+                "high_attrition_state": state in risk_flags.get("high_attrition_states", []),
+                "sleeper_risk": 0 < project["dkw_mwe"] < risk_flags.get("sleeper_threshold_dkw", 50),
+            },
+        }
+        return {"content": [{"type": "text", "text": json.dumps(result, indent=2)}]}
+
+    elif query_type == "to_benchmark":
+        to = args.get("to_name", "")
+        return {"content": [{"type": "text", "text": json.dumps({
+            "survival": benchmarks.get("survival_by_to", {}).get(to, {}),
+            "cost_swing": benchmarks.get("cost_swing_by_to", {}).get(to, {}),
+            "volatile_ranking": next(
+                (v for v in benchmarks.get("volatile_to_ranking", []) if v["to"] == to), None
+            ),
+        }, indent=2)}]}
+
+    elif query_type == "state_benchmark":
+        state = args.get("state", "")
+        return {"content": [{"type": "text", "text": json.dumps({
+            "survival": benchmarks.get("survival_by_state", {}).get(state, {}),
+            "is_high_attrition": state in benchmarks.get("risk_flags", {}).get("high_attrition_states", []),
+        }, indent=2)}]}
+
+    elif query_type == "resource_benchmark":
+        resource = args.get("resource_type", "")
+        return {"content": [{"type": "text", "text": json.dumps({
+            "survival": benchmarks.get("survival_by_resource", {}).get(resource, {}),
+        }, indent=2)}]}
+
+    elif query_type == "risk_flags":
+        return {"content": [{"type": "text", "text": json.dumps({
+            "risk_flags": benchmarks.get("risk_flags", {}),
+            "volatile_to_ranking": benchmarks.get("volatile_to_ranking", []),
+            "phase1_confidence": benchmarks.get("phase1_cost_confidence", {}),
+            "tc1_overall": benchmarks.get("tc1_overall", {}),
+        }, indent=2)}]}
+
+    elif query_type == "compare":
+        compare_ids = args.get("compare_ids", [])
+        cycle_phase = args.get("cycle_phase", "tc2_phase1")
+        phase_data = all_features.get(cycle_phase, [])
+        projects = [p for p in phase_data if p["project_id"] in compare_ids]
+        return {"content": [{"type": "text", "text": json.dumps({
+            "projects": projects,
+            "dkw_distribution": benchmarks.get("dkw_distribution", {}),
+        }, indent=2)}]}
+
+    return {"content": [{"type": "text", "text": f"Unknown query_type: {query_type}"}]}
+
+
 # Create MCP server with custom tools
 grid_tools_server = create_sdk_mcp_server(
     name="grid_tools",
     version="1.0.0",
-    tools=[analyze_queue, calculate_costs]
+    tools=[analyze_queue, calculate_costs, analyze_cluster_results]
 )
 
 
@@ -507,7 +696,8 @@ async def run_agent(
             allowed_tools=[
                 "Read", "Write", "Edit", "Bash", "Grep", "Glob",
                 "mcp__grid_tools__analyze_queue",
-                "mcp__grid_tools__calculate_costs"
+                "mcp__grid_tools__calculate_costs",
+                "mcp__grid_tools__analyze_cluster_results"
             ],
             # Custom MCP servers
             mcp_servers={"grid_tools": grid_tools_server},
