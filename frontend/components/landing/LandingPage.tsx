@@ -86,7 +86,7 @@ export function LandingPage() {
                 <h3
                   className="mono"
                   style={{
-                    fontSize: "0.75rem",
+                    fontSize: "1rem",
                     marginBottom: "0.75rem",
                     opacity: 0.7,
                   }}
@@ -105,7 +105,7 @@ export function LandingPage() {
                 <h3
                   className="mono"
                   style={{
-                    fontSize: "0.75rem",
+                    fontSize: "1rem",
                     marginBottom: "0.75rem",
                     opacity: 0.7,
                   }}
@@ -125,7 +125,7 @@ export function LandingPage() {
                 <h3
                   className="mono"
                   style={{
-                    fontSize: "0.75rem",
+                    fontSize: "1rem",
                     marginBottom: "0.75rem",
                     opacity: 0.7,
                   }}
