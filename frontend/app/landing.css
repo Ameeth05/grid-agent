@@ -181,14 +181,19 @@
 }
 
 .landing-brand-icon {
-  width: 24px;
-  height: 24px;
-  border: 1px solid var(--c-nav-text);
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-size: 10px;
-  font-family: var(--f-mono);
+  overflow: hidden;
+}
+
+.landing-brand-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 /* Theme toggle */

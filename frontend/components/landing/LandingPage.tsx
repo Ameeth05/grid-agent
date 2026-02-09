@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import "@/app/landing.css";
 
@@ -90,7 +91,9 @@ export function LandingPage() {
     >
       <div className="landing-grid-container">
         <nav className="landing-panel landing-nav-panel">
-          <div className="landing-brand-icon">G</div>
+          <div className="landing-brand-icon">
+            <Image src="/logo.png" alt="GridAgent" width={28} height={28} />
+          </div>
           <div className="landing-vertical-text mono">
             Power Markets Research
           </div>

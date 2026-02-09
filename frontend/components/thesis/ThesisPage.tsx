@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import "@/app/thesis.css";
 
@@ -48,7 +49,7 @@ export function ThesisPage() {
       {/* Sidebar */}
       <nav className="thesis-sidebar">
         <Link href="/" className="thesis-sidebar-icon" aria-label="Home">
-          G
+          <Image src="/logo.png" alt="GridAgent" width={28} height={28} />
         </Link>
         <span className="thesis-sidebar-label mono">The Thesis</span>
         <span className="thesis-sidebar-label mono">2025</span>
