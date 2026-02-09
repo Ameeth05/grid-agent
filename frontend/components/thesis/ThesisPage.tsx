@@ -13,7 +13,7 @@ const sections = [
 ];
 
 export function ThesisPage() {
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(true);
   const [activeSection, setActiveSection] = useState("challenge");
 
   useEffect(() => {
