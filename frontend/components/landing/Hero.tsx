@@ -67,7 +67,7 @@ export function Hero() {
           transition={{ delay: 0.3, duration: 1, ease: 'easeOut' }}
           className="text-center mb-8"
         >
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-light tracking-tight mb-6 text-white">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tight mb-6 text-white">
             AI Agents For{' '}
             <span className="text-lime text-glow-lime">
               US Power Market Intelligence
@@ -75,12 +75,12 @@ export function Hero() {
           </h1>
 
           {/* Rotating subtitle */}
-          <div className="h-16 flex items-baseline justify-center gap-3">
-            <span className="text-xl sm:text-2xl md:text-3xl text-white/60 font-light">
+          <div className="h-12 sm:h-16 flex items-baseline justify-center gap-2 sm:gap-3">
+            <span className="text-sm sm:text-xl md:text-2xl lg:text-3xl text-white/60 font-light">
               AI-Powered
             </span>
-            <span className="text-xl sm:text-2xl md:text-3xl text-white/40 font-light">—</span>
-            <div className="relative w-[260px] sm:w-[340px] md:w-[400px] overflow-visible">
+            <span className="text-sm sm:text-xl md:text-2xl lg:text-3xl text-white/40 font-light">—</span>
+            <div className="relative w-[180px] sm:w-[300px] md:w-[400px] overflow-visible">
               <AnimatePresence mode="wait">
                 <motion.span
                   key={wordIndex}
@@ -88,7 +88,7 @@ export function Hero() {
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: -30, opacity: 0 }}
                   transition={{ duration: 0.4, ease: 'easeOut' }}
-                  className="inline-block text-xl sm:text-2xl md:text-3xl font-semibold text-lime whitespace-nowrap"
+                  className="inline-block text-sm sm:text-xl md:text-2xl lg:text-3xl font-semibold text-lime whitespace-nowrap"
                 >
                   {rotatingWords[wordIndex]}
                 </motion.span>
@@ -116,7 +116,7 @@ export function Hero() {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask about Generation Interconnection, Cluster Results, Interconnection Queue, ISO Meetings..."
-                className="min-h-[180px] resize-none border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 pr-16 text-base sm:text-lg text-white placeholder:text-white/40 p-6"
+                className="min-h-[120px] sm:min-h-[180px] resize-none border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 pr-16 text-sm sm:text-base md:text-lg text-white placeholder:text-white/40 p-4 sm:p-6"
               />
               <div className="absolute right-4 bottom-4 flex items-center gap-2">
                 <span className="text-xs text-white/40 hidden sm:block">
@@ -125,7 +125,7 @@ export function Hero() {
                 <Button
                   type="submit"
                   size="icon"
-                  className="h-14 w-14 rounded-xl bg-lime text-[#080a00] hover:scale-105 hover:shadow-[0_0_20px_rgba(200,255,50,0.4)] transition-all duration-300"
+                  className="h-10 w-10 sm:h-14 sm:w-14 rounded-xl bg-lime text-[#080a00] hover:scale-105 hover:shadow-[0_0_20px_rgba(200,255,50,0.4)] transition-all duration-300"
                 >
                   <Send className="h-6 w-6" />
                 </Button>
@@ -153,11 +153,11 @@ export function Hero() {
           <Button
             onClick={() => setDemoFormOpen(true)}
             size="lg"
-            className="group bg-lime text-[#080a00] font-semibold px-10 py-7 text-lg rounded-xl hover:scale-105 hover:shadow-[0_0_30px_rgba(200,255,50,0.5)] transition-all duration-300"
+            className="group bg-lime text-[#080a00] font-semibold px-6 py-5 sm:px-10 sm:py-7 text-base sm:text-lg rounded-xl hover:scale-105 hover:shadow-[0_0_30px_rgba(200,255,50,0.5)] transition-all duration-300"
           >
             <Image
               src="/logo.png"
-              alt="GridAgent"
+              alt="Gridsurf"
               width={20}
               height={20}
               className="mr-2 h-5 w-5"

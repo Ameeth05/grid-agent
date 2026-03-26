@@ -21,14 +21,14 @@ export function Footer() {
               <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-lime overflow-hidden transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(200,255,50,0.4)]">
                 <Image
                   src="/logo.png"
-                  alt="GridAgent"
+                  alt="Gridsurf"
                   width={36}
                   height={36}
                   className="w-full h-full object-cover"
                 />
               </div>
               <span className="text-xl font-bold tracking-[0.1em] transition-all duration-300 group-hover:tracking-[0.15em] text-lime">
-                GRIDAGENT
+                GRIDSURF
               </span>
             </Link>
             <p className="text-sm text-white/50 max-w-xs mb-6 leading-relaxed font-light">
@@ -75,7 +75,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-lime/10 mt-12 pt-8 flex justify-center items-center">
           <p className="text-sm text-white/40">
-            © {new Date().getFullYear()} GridAgent. All rights reserved.
+            © {new Date().getFullYear()} Gridsurf. All rights reserved.
           </p>
         </div>
       </div>

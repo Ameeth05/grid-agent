@@ -92,10 +92,10 @@ export function LandingPage() {
       <div className="landing-grid-container">
         <nav className="landing-panel landing-nav-panel">
           <div className="landing-brand-icon">
-            <Image src="/logo.png" alt="GridAgent" width={28} height={28} />
+            <Image src="/logo.png" alt="Gridsurf" width={28} height={28} />
           </div>
           <div className="landing-vertical-text mono">
-            Power Markets Research
+            Gridsurf
           </div>
           <div className="landing-vertical-text mono">Sys. v1</div>
         </nav>
@@ -106,7 +106,7 @@ export function LandingPage() {
           <span className="landing-corner landing-corner-bl" />
           <span className="landing-corner landing-corner-br" />
           <div className="landing-meta-header mono">
-            <span>Decision Intelligence</span>
+            <span>Gridsurf / Decision Intelligence</span>
             <div
               style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}
             >
@@ -125,16 +125,16 @@ export function LandingPage() {
             <h1 className="landing-hero-title">
               Grid
               <br />
-              Agent
+              Surf
             </h1>
             <h2 className="landing-hero-sub">
-              AI Analyst for Power Markets Research
+              Gridsurf builds AI intelligence for power markets research
             </h2>
           </div>
 
           <div className="landing-chatbox">
             <div className="landing-chatbox-header">
-              <span>GridAgent Terminal</span>
+              <span>Gridsurf Terminal</span>
               <div className="landing-chatbox-status">
                 <span className="landing-chatbox-status-dot" />
                 <span>Active</span>
@@ -191,7 +191,7 @@ export function LandingPage() {
           <div className="landing-body-grid">
             <div className="v-flex" style={{ gap: "1rem" }}>
               <p className="landing-body-text">
-                We&apos;re building a system to turn fragmented grid,
+                Gridsurf is building a system to turn fragmented grid,
                 interconnection, and market data into clear, actionable answers.
               </p>
               <p className="landing-body-text">
@@ -268,15 +268,16 @@ export function LandingPage() {
                   WHO WE ARE
                 </h3>
                 <p className="landing-body-text">
-                  We combine experience in power markets, grid engineering, and
-                  AI systems. One founder works in energy markets analysis in
-                  the U.S., focusing on interconnection, market dynamics, and
-                  project risk. The other is a grid engineer working on
-                  utility-scale solar and storage projects and previously built
-                  GridSensAI, a tool for querying and analyzing grid data. We
-                  started building our agent after repeatedly seeing how
-                  fragmented and difficult power market data is, and how much
-                  time developers spend interpreting it manually.
+                  Gridsurf combines experience in power markets, grid
+                  engineering, and AI systems. One founder works in energy
+                  markets analysis in the U.S., focusing on interconnection,
+                  market dynamics, and project risk. The other is a grid
+                  engineer working on utility-scale solar and storage projects
+                  and previously built GridSensAI, a tool for querying and
+                  analyzing grid data. We started building our agent after
+                  repeatedly seeing how fragmented and difficult power market
+                  data is, and how much time developers spend interpreting it
+                  manually.
                 </p>
               </div>
             </div>

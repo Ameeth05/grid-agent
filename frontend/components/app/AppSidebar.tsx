@@ -41,13 +41,13 @@ export function AppSidebar() {
             <div className="w-8 h-8 rounded-lg bg-lime overflow-hidden">
               <Image
                 src="/logo.png"
-                alt="GridAgent"
+                alt="Gridsurf"
                 width={32}
                 height={32}
                 className="w-full h-full object-cover"
               />
             </div>
-            <span className="font-bold text-lime tracking-wide">GRIDAGENT</span>
+            <span className="font-bold text-lime tracking-wide">GRIDSURF</span>
           </Link>
         )}
         <Button

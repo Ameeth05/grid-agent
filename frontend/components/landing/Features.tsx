@@ -110,7 +110,7 @@ export function Features() {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full border border-lime/20 bg-lime/5">
             <Image
               src="/logo.png"
-              alt="GridAgent"
+              alt="Gridsurf"
               width={16}
               height={16}
               className="h-4 w-4"

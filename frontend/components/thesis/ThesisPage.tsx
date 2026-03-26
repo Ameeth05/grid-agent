@@ -8,7 +8,7 @@ import "@/app/thesis.css";
 const sections = [
   { id: "challenge", num: "01", label: "The Challenge" },
   { id: "bottleneck", num: "02", label: "The Bottleneck" },
-  { id: "gridagent", num: "03", label: "Enter GridAgent" },
+  { id: "gridsurf", num: "03", label: "Enter Gridsurf" },
   { id: "moat", num: "04", label: "Our Moat" },
   { id: "cta", num: "05", label: "Reach Out" },
 ];
@@ -49,9 +49,9 @@ export function ThesisPage() {
       {/* Sidebar */}
       <nav className="thesis-sidebar">
         <Link href="/" className="thesis-sidebar-icon" aria-label="Home">
-          <Image src="/logo.png" alt="GridAgent" width={28} height={28} />
+          <Image src="/logo.png" alt="Gridsurf" width={28} height={28} />
         </Link>
-        <span className="thesis-sidebar-label mono">The Thesis</span>
+        <span className="thesis-sidebar-label mono">Gridsurf</span>
         <span className="thesis-sidebar-label mono">2025</span>
       </nav>
 
@@ -80,15 +80,15 @@ export function ThesisPage() {
 
         {/* Hero */}
         <div className="thesis-hero">
-          <span className="thesis-hero-label mono">GridAgent / Manifesto</span>
+          <span className="thesis-hero-label mono">Gridsurf / Manifesto</span>
           <h1 className="thesis-hero-title">
             The
             <br />
             Thesis
           </h1>
           <p className="thesis-hero-subtitle">
-            Why we&apos;re building the intelligence layer for US power markets,
-            and why now.
+            Why we&apos;re building the intelligence layer for US power
+            markets, and why now.
           </p>
         </div>
 
@@ -178,13 +178,13 @@ export function ThesisPage() {
             <hr className="thesis-divider" />
 
             {/* Section 03 */}
-            <section id="gridagent" className="thesis-section">
-              <span className="thesis-section-num">03 - Enter GridAgent</span>
+            <section id="gridsurf" className="thesis-section">
+              <span className="thesis-section-num">03 - Enter Gridsurf</span>
               <h2 className="thesis-section-title">
                 The AI Analyst for Power Market Mastery
               </h2>
               <p>
-                We&apos;re automating research and rebuilding the
+                At Gridsurf, we&apos;re automating research and rebuilding the
                 workflow around it. Think of us as your 24/7 AI agent being
                 built specifically for US power market analysis. Our moat sits
                 in two tightly connected layers:

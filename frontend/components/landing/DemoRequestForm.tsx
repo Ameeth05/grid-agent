@@ -87,7 +87,7 @@ export function DemoRequestForm({ open, onOpenChange, source = 'landing' }: Demo
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-electric-500 to-electric-600 flex items-center justify-center overflow-hidden">
               <Image
                 src="/logo.png"
-                alt="GridAgent"
+                alt="Gridsurf"
                 width={40}
                 height={40}
                 className="w-full h-full object-cover"

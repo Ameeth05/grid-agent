@@ -337,6 +337,11 @@
   .thesis-hero-title {
     max-width: 100%;
   }
+  .thesis-article {
+    max-width: 100%;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
 @media (max-width: 768px) {
@@ -348,30 +353,67 @@
     width: 100%;
     height: 50px;
     flex-direction: row;
-    padding: 0 1.5rem;
+    padding: 0 1rem;
     border-right: none;
     border-bottom: 1px solid var(--c-nav-border);
+    gap: 0.75rem;
   }
   .thesis-sidebar-label {
     writing-mode: horizontal-tb;
     transform: none;
+    font-size: 0.6rem;
   }
   .thesis-content {
     margin-left: 0;
     margin-top: 50px;
     width: 100%;
   }
-  .thesis-header,
-  .thesis-hero,
-  .thesis-article {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+  .thesis-header {
+    padding: 1rem 1.25rem;
   }
   .thesis-hero {
-    padding-top: 1.5rem;
-    padding-bottom: 1rem;
+    position: relative;
+    padding: 1.25rem 1.25rem 1rem;
+  }
+  .thesis-hero-title {
+    font-size: clamp(1.8rem, 8vw, 3rem);
+  }
+  .thesis-hero-subtitle {
+    font-size: 1rem;
+    max-width: 100%;
   }
   .thesis-article {
-    padding-top: 2rem;
+    padding: 1.5rem 1.25rem 4rem;
+  }
+  .thesis-section {
+    margin-bottom: 2.5rem;
+    scroll-margin-top: 80px;
+  }
+  .thesis-section-title {
+    font-size: 1.3rem;
+  }
+  .thesis-section p {
+    font-size: 0.95rem;
+  }
+  .thesis-pullquote {
+    font-size: 1.05rem;
+    margin: 1.5rem 0;
+    padding-left: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .thesis-hero-title {
+    font-size: 1.6rem;
+  }
+  .thesis-section-title {
+    font-size: 1.15rem;
+  }
+  .thesis-section p {
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+  .thesis-pullquote {
+    font-size: 0.95rem;
   }
 }

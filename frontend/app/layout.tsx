@@ -4,12 +4,12 @@ import { Providers } from '@/components/Providers'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'GridAgent - AI Analyst for US Grid and Power Markets',
+  title: 'Gridsurf - AI Intelligence for US Power Markets',
   description: 'AI-powered research and analysis for US grid interconnection queues and power markets. Transform weeks of due diligence into minutes.',
-  keywords: ['grid', 'power markets', 'interconnection', 'PJM', 'MISO', 'ERCOT', 'AI', 'analysis'],
-  authors: [{ name: 'GridAgent' }],
+  keywords: ['grid', 'power markets', 'interconnection', 'PJM', 'MISO', 'ERCOT', 'AI', 'analysis', 'gridsurf'],
+  authors: [{ name: 'Gridsurf' }],
   openGraph: {
-    title: 'GridAgent - AI Analyst for US Grid and Power Markets',
+    title: 'Gridsurf - AI Intelligence for US Power Markets',
     description: 'Transform weeks of due diligence into minutes with AI-powered grid analysis.',
     type: 'website',
   },

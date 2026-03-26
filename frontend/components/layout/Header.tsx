@@ -46,14 +46,14 @@ export function Header() {
           <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-lime overflow-hidden transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(200,255,50,0.4)]">
             <Image
               src="/logo.png"
-              alt="GridAgent"
+              alt="Gridsurf"
               width={36}
               height={36}
               className="w-full h-full object-cover"
             />
           </div>
           <span className="hidden sm:inline text-xl font-bold tracking-[0.1em] transition-all duration-300 group-hover:tracking-[0.15em] text-lime">
-            GRIDAGENT
+            GRIDSURF
           </span>
         </Link>
 

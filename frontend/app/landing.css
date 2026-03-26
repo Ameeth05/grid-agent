@@ -65,8 +65,8 @@
 .landing-page {
   box-sizing: border-box;
   font-family: var(--f-sans);
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   transition: background-color 0.3s ease;
@@ -115,7 +115,9 @@
 .landing-grid-container {
   display: grid;
   grid-template-columns: 60px 1.4fr 1fr;
-  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  flex: 1;
   width: 100%;
   border-top: 1px solid var(--c-nav-border);
 }
@@ -517,27 +519,80 @@
   .landing-nav-panel {
     flex-direction: row;
     width: 100%;
-    height: 60px;
-    padding: 0 1.5rem;
+    height: 56px;
+    padding: 0 1rem;
     border-bottom: 1px solid var(--c-nav-border);
     border-right: none;
+    gap: 0.75rem;
   }
   .landing-vertical-text {
     writing-mode: horizontal-tb;
     transform: none;
+    font-size: 0.6rem;
   }
   .landing-panel {
-    min-height: 80vh;
-    padding: 1.5rem;
+    min-height: auto;
+    padding: 1.25rem;
+  }
+  .landing-main-panel {
+    min-height: 100vh;
+    min-height: 100dvh;
   }
   .landing-hero-title {
-    font-size: 3.5rem;
+    font-size: clamp(2.2rem, 10vw, 3.5rem);
+    max-width: 100%;
+  }
+  .landing-hero-sub {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    max-width: 100%;
+  }
+  .landing-meta-header {
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
   }
   .landing-body-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+    padding-top: 1.25rem;
+  }
+  .landing-body-text {
+    font-size: 0.85rem;
+  }
+  .landing-chatbox {
+    max-height: 220px;
+  }
+  .landing-chatbox-msg {
+    font-size: 0.7rem;
   }
   .landing-agent-panel {
     display: flex;
-    min-height: 60vh;
+    min-height: auto;
+    padding: 1.25rem;
+  }
+  .landing-agent-header {
+    margin-bottom: 1.5rem;
+  }
+  .landing-submit-btn {
+    padding: 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-hero-title {
+    font-size: 2rem;
+  }
+  .landing-hero-sub {
+    font-size: 0.95rem;
+  }
+  .landing-chatbox {
+    max-height: 180px;
+  }
+  .landing-chatbox-msg {
+    font-size: 0.65rem;
+  }
+  .landing-panel {
+    padding: 1rem;
   }
 }
