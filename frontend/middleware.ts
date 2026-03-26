@@ -1,23 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
-import { updateSession, isProtectedRoute } from '@/lib/supabase/middleware'
 
-// Local development mode - bypass Supabase auth
-const LOCAL_DEV = process.env.NEXT_PUBLIC_LOCAL_DEV === 'true'
-
-export async function middleware(request: NextRequest) {
-  // LOCAL_DEV: Skip Supabase session management entirely
-  if (LOCAL_DEV) {
-    return NextResponse.next()
-  }
-
-  // Update supabase session
-  const response = await updateSession(request)
-
-  // For protected routes, we let the client-side handle the redirect
-  // This provides a smoother UX with loading states
-  // The auth check happens in components using useAuth hook
-
-  return response
+export function middleware(_request: NextRequest) {
+  return NextResponse.next()
 }
 
 export const config = {
