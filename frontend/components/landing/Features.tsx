@@ -125,7 +125,7 @@ export function Features() {
               Automate Your Workflows
             </span>
             <br />
-            <span className="text-white/90">with GridAgent</span>
+            <span className="text-white/90">with our agents</span>
           </h2>
 
           <p className="text-lg sm:text-xl text-white/60 max-w-3xl mx-auto mb-12 leading-relaxed font-light">

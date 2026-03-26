@@ -44,7 +44,7 @@ export function CTA() {
           </h2>
 
           <p className="text-lg sm:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
-            Join developers, investors, and analysts who are already using GridAgent
+            Join developers, investors, and analysts who are already using our agent
             to make smarter decisions in US power markets.
           </p>
 

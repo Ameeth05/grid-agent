@@ -96,7 +96,7 @@ export function DemoRequestForm({ open, onOpenChange, source = 'landing' }: Demo
             <DialogTitle className="text-2xl font-display">Request a Demo</DialogTitle>
           </div>
           <DialogDescription className="text-base">
-            Get personalized walkthrough of GridAgent for your team.
+            Get personalized walkthrough of our agent for your team.
           </DialogDescription>
         </DialogHeader>
 

@@ -26,7 +26,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
         <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-electric-500/20 to-grid-500/20 flex items-center justify-center mb-6 shadow-lg shadow-electric-500/10">
           <Bot className="h-10 w-10 text-electric-500" />
         </div>
-        <h3 className="font-display text-2xl font-bold mb-3">Welcome to GridAgent</h3>
+        <h3 className="font-display text-2xl font-bold mb-3">Welcome to our agent</h3>
         <p className="text-muted-foreground max-w-lg mb-8 leading-relaxed">
           Ask me anything about US grid interconnection queues, cluster studies,
           FERC policies, or power market analysis. I have access to data from all 6 major ISOs.
@@ -65,7 +65,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
             </div>
             <div className="flex items-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin text-electric-500" />
-              <span className="text-sm text-muted-foreground">GridAgent is thinking...</span>
+              <span className="text-sm text-muted-foreground">Our agent is thinking...</span>
             </div>
           </div>
         )}

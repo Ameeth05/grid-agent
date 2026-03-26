@@ -36,13 +36,13 @@ export default function AboutPage() {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full border border-electric-500/30 bg-electric-500/10 text-electric-600 dark:text-electric-400">
             <Zap className="h-4 w-4" />
-            <span className="text-sm font-medium">About GridAgent</span>
+            <span className="text-sm font-medium">About our agent</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             Accelerating the Energy Transition
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            GridAgent is an AI-powered research agent that transforms how energy professionals
+            Our agent is an AI-powered research agent that transforms how energy professionals
             analyze US grid interconnection data and power market intelligence.
           </p>
         </div>
@@ -69,7 +69,7 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold mb-4">Our Solution</h2>
           <div className="prose dark:prose-invert max-w-none">
             <p className="text-lg text-muted-foreground">
-              GridAgent is an AI research agent that can answer complex questions about grid
+              Our agent is an AI research agent that can answer complex questions about grid
               interconnection in seconds. Ask about network upgrade costs, queue positions,
               cluster study results, withdrawal risks, or FERC policy impacts, and get instant,
               accurate answers backed by primary source data.

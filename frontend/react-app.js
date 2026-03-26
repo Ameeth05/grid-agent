@@ -413,7 +413,7 @@ const App = () => {
                 WHAT WE'RE BUILDING
               </h3>
               <p className="body-text" style={{ fontSize: '0.9rem' }}>
-                GridAgent structures power market data into machine-readable context. 
+                Our agent structures power market data into machine-readable context. 
                 Our decision agents answer questions about project risks, timelines, and constraints with citations. 
                 This speeds up analysis from weeks to seconds.
               </p>
@@ -427,7 +427,7 @@ const App = () => {
                 We combine experience in power markets, grid engineering, and AI systems.
                 One founder works in energy markets analysis in the U.S., focusing on interconnection, market dynamics, and project risk.
                 The other is a grid engineer working on utility-scale solar and storage projects and previously built GridSensAI, a tool for querying and analyzing grid data.
-                We started GridAgent after repeatedly seeing how fragmented and difficult power market data is, and how much time developers spend interpreting it manually.
+                We started building our agent after repeatedly seeing how fragmented and difficult power market data is, and how much time developers spend interpreting it manually.
               </p>
             </div>
           </div>

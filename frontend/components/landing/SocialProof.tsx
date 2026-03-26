@@ -5,7 +5,7 @@ import { Quote, Building2, Zap, Target, Clock, CheckCircle2 } from 'lucide-react
 
 const testimonials = [
   {
-    quote: "GridAgent reduced our interconnection queue analysis from 3 weeks to 30 minutes. It's become indispensable for our due diligence process.",
+    quote: "Our agent reduced our interconnection queue analysis from 3 weeks to 30 minutes. It's become indispensable for our due diligence process.",
     author: "Director of Grid Development",
     company: "PE-backed IPP",
     metric: "95% time saved",
@@ -17,7 +17,7 @@ const testimonials = [
     metric: "2 bad deals avoided",
   },
   {
-    quote: "We use GridAgent to monitor our entire portfolio's queue positions. The proactive alerts have been game-changing.",
+    quote: "We use our agent to monitor our entire portfolio's queue positions. The proactive alerts have been game-changing.",
     author: "Portfolio Manager",
     company: "Infrastructure Fund",
     metric: "500+ projects tracked",
@@ -93,7 +93,7 @@ export function SocialProof() {
               Trusted by power market professionals
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              From PE-backed developers to infrastructure funds, GridAgent is the go-to tool for grid intelligence.
+              From PE-backed developers to infrastructure funds, our agent is the go-to tool for grid intelligence.
             </p>
           </div>
 
@@ -137,7 +137,7 @@ export function SocialProof() {
               Built for your workflow
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Whether you're evaluating a new acquisition or monitoring an existing portfolio, GridAgent fits right in.
+              Whether you're evaluating a new acquisition or monitoring an existing portfolio, our agent fits right in.
             </p>
           </div>
 

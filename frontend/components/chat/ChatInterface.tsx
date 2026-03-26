@@ -173,7 +173,7 @@ export function ChatInterface() {
                 placeholder={
                   connectionState === 'connected'
                     ? 'Ask about interconnection queues, cluster studies, FERC policies...'
-                    : 'Connecting to GridAgent...'
+                    : 'Connecting to our agent...'
                 }
                 disabled={isLoading || connectionState !== 'connected'}
                 className="min-h-[60px] max-h-[200px] resize-none pr-12"

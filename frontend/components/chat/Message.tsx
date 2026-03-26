@@ -105,7 +105,7 @@ export function Message({ message, onRegenerate }: MessageProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-medium text-sm text-lime">
-              {isUser ? 'You' : 'GridAgent'}
+              {isUser ? 'You' : 'Our agent'}
             </span>
             {message.isStreaming && <PulsingDots />}
           </div>

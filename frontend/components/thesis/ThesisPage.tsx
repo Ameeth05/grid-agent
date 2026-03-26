@@ -184,7 +184,7 @@ export function ThesisPage() {
                 The AI Analyst for Power Market Mastery
               </h2>
               <p>
-                At GridAgent, we&apos;re automating research and rebuilding the
+                We&apos;re automating research and rebuilding the
                 workflow around it. Think of us as your 24/7 AI agent being
                 built specifically for US power market analysis. Our moat sits
                 in two tightly connected layers:
@@ -192,7 +192,7 @@ export function ThesisPage() {
 
               <div className="thesis-pullquote">
                 This isn&apos;t off-the-shelf AI. Anyone can call an LLM API.
-                What makes GridAgent different is the full ecosystem we&apos;re
+                What makes our agent different is the full ecosystem we&apos;re
                 building.
               </div>
 
@@ -213,7 +213,7 @@ export function ThesisPage() {
                 stakeholder meetings actually signal about the future.
               </p>
               <p>
-                What makes GridAgent different is the full ecosystem:
+                What makes our agent different is the full ecosystem:
                 proprietary data pipelines, custom skills being writen
                 rigorously on real power-market problems, intuitive UX that will
                 let humans and AI work together seamlessly, and reliability
@@ -262,7 +262,7 @@ export function ThesisPage() {
                 Close the Intelligence Gap
               </h2>
               <p>
-                GridAgent will help decision-makers reclaim hours for high-level
+                Our agent will help decision-makers reclaim hours for high-level
                 strategy, help developers pick sites with real risk-adjusted
                 visibility, and give investors sharper edges in portfolio
                 decisions. We won&apos;t replace experts. We will amplify them

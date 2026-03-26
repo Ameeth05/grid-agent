@@ -248,7 +248,7 @@ export function LandingPage() {
                   WHAT WE&apos;RE BUILDING
                 </h3>
                 <p className="landing-body-text">
-                  GridAgent is structuring power market data into
+                  Our agent is structuring power market data into
                   machine-readable context. Our decision agents are being built
                   to answer questions about project risks, timelines, and
                   constraints with citations. This will speed up analysis from
@@ -274,9 +274,9 @@ export function LandingPage() {
                   project risk. The other is a grid engineer working on
                   utility-scale solar and storage projects and previously built
                   GridSensAI, a tool for querying and analyzing grid data. We
-                  started GridAgent after repeatedly seeing how fragmented and
-                  difficult power market data is, and how much time developers
-                  spend interpreting it manually.
+                  started building our agent after repeatedly seeing how
+                  fragmented and difficult power market data is, and how much
+                  time developers spend interpreting it manually.
                 </p>
               </div>
             </div>

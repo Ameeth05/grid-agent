@@ -66,7 +66,7 @@ export function SignInButton({ className }: SignInButtonProps) {
           <DialogTitle>{isSignUp ? 'Create an account' : 'Welcome back'}</DialogTitle>
           <DialogDescription>
             {isSignUp
-              ? 'Sign up to start using GridAgent'
+              ? 'Sign up to start using our agent'
               : 'Sign in to your account to continue'}
           </DialogDescription>
         </DialogHeader>
